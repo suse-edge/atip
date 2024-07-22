@@ -80,32 +80,25 @@ The following steps are required to prepare the airgap artifacts:
     ``` 
     $ cat > edge-release-images.txt <<EOF
     rancher/hardened-sriov-network-operator:v1.2.0-build20240327
-    rancher/rancher/hardened-sriov-network-config-daemon:v1.2.0-build20240327
-    rancher/hardened-sriov-cni:v1.2.0-build20240327
-    rancher/hardened-ib-sriov-cni:v1.2.0-build20240327
-    rancher/hardened-sriov-network-device-plugin:v1.2.0-build20240327
-    rancher/hardened-sriov-network-resources-injector:v1.2.0-build20240327
+    rancher/hardened-sriov-network-config-daemon:v1.2.0-build20240327
+    rancher/hardened-sriov-cni:v2.7.0-build20240327
+    rancher/hardened-ib-sriov-cni:v1.0.3-build20240327
+    rancher/hardened-sriov-network-device-plugin:v3.6.2-build20240327
+    rancher/hardened-sriov-network-resources-injector:v1.5-build20240327
     rancher/hardened-sriov-network-webhook:v1.2.0-build20240327
     EOF
     ```
   - Using the [following script](https://github.com/suse-edge/fleet-examples/blob/release-3.0/scripts/day2/edge-save-images.sh) and the list created above, you can generate in local the tarball with the images required for the edge cluster.
     ```
-    $ ./edge-save-images.sh -al ./edge-release-images.txt -s registry.suse.com
-    Pulled: registry.suse.com/rancher/hardened-sriov-network-operator:v1.2.0-build20240327
-    Pulled: registry.suse.com/rancher/rancher/hardened-sriov-network-config-daemon:v1.2.0-build20240327
-    Pulled: registry.suse.com/rancher/hardened-sriov-cni:v1.2.0-build20240327
-    Pulled: registry.suse.com/rancher/hardened-ib-sriov-cni:v1.2.0-build20240327
-    Pulled: registry.suse.com/rancher/hardened-sriov-network-device-plugin:v1.2.0-build20240327
-    Pulled: registry.suse.com/rancher/hardened-sriov-network-resources-injector:v1.2.0-build20240327
-    Pulled: registry.suse.com/rancher/hardened-sriov-network-webhook:v1.2.0-build20240327
-    a edge-release-images-tgz-20240705
-    a edge-release-images-tgz-20240705/hardened-sriov-network-operator-v1.2.0-build20240327.tar.gz
-    a edge-release-images-tgz-20240705/hardened-sriov-network-config-daemon-v1.2.0-build20240327.tar.gz
-    a edge-release-images-tgz-20240705/hardened-sriov-cni-v1.2.0-build20240327.tar.gz
-    a edge-release-images-tgz-20240705/hardened-ib-sriov-cni-v1.2.0-build20240327.tar.gz
-    a edge-release-images-tgz-20240705/hardened-sriov-network-device-plugin-v1.2.0-build20240327.tar.gz
-    a edge-release-images-tgz-20240705/hardened-sriov-network-resources-injector-v1.2.0-build20240327.tar.gz
-    a edge-release-images-tgz-20240705/hardened-sriov-network-webhook-v1.2.0-build20240327.tar.gz
+    $ ./edge-save-images.sh -l ./edge-release-images.txt -s registry.suse.com
+    Image pull success: registry.suse.com/rancher/hardened-sriov-network-operator:v1.2.0-build20240327
+    Image pull success: registry.suse.com/rancher/hardened-sriov-network-config-daemon:v1.2.0-build20240327
+    Image pull success: registry.suse.com/rancher/hardened-sriov-cni:v2.7.0-build20240327
+    Image pull success: registry.suse.com/rancher/hardened-ib-sriov-cni:v1.0.3-build20240327
+    Image pull success: registry.suse.com/rancher/hardened-sriov-network-device-plugin:v3.6.2-build20240327
+    Image pull success: registry.suse.com/rancher/hardened-sriov-network-resources-injector:v1.5-build20240327
+    Image pull success: registry.suse.com/rancher/hardened-sriov-network-webhook:v1.2.0-build20240327
+    Creating edge-images.tar.gz with 7 images
     ```
     
   - Upload your tarball to your private registry to preload with the images downloaded in the previous step using the [following script](https://github.com/suse-edge/fleet-examples/blob/release-3.0/scripts/day2/edge-load-images.sh)
