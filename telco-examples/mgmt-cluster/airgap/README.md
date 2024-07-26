@@ -102,7 +102,7 @@ A list of curl commands to download the necessary files (clusterctl binary and t
 
 ```bash
 # clusterctl binary
-curl -L https://github.com/kubernetes-sigs/cluster-api/releases/download/1.6.2/clusterctl-linux-amd64 -o /usr/local/bin/clusterctl
+curl -L https://github.com/kubernetes-sigs/cluster-api/releases/download/v1.6.2/clusterctl-linux-amd64 -o /usr/local/bin/clusterctl
 
 # boostrap-components (boostrap-rke2)
 curl -L https://github.com/rancher-sandbox/cluster-api-provider-rke2/releases/download/v0.2.6/bootstrap-components.yaml
