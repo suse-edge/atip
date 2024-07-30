@@ -150,7 +150,7 @@ spec:
                   data:
                     ca.crt: |-
                       -----BEGIN CERTIFICATE-----
-                      ${CA_BASE64_CERT}
+                      ${CA_CERT}
                       -----END CERTIFICATE-----
                   ---
                   apiVersion: helm.cattle.io/v1

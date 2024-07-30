@@ -168,6 +168,12 @@ The first thing is to modify the `telco-capi-airgap.yaml` file and replace the f
 
 - `${TLS_BASE64_CERT}` and `${TLS_BASE64_KEY}` - In case your private registry contains a client certificate and key, you should encode them in base64 format and replace these variables.
 - `${CA_BASE64_CERT}` - In case your private registry enables TLS, you need to encode a CA certificate in base64 format and replace this variable.
+- `${CA_CERT}` - Same value as `${CA_BASE64_CERT}` but without encoding.
+- `${REGISTRY_AUTH_DOCKERCONFIGJSON}` - In case your private registry enables the basic auth mechanism, you need to encode the username and password in base64 format and replace this variable. As a reference, you can use the following command to generate the value:
+  ```
+  $ echo -n '{"auths":{"myregistry:5000":{"username":"${REGISTRY_USERNAME}","password":"${REGISTRY_PASSWORD}","email":"none"}}}' | base64
+  ```
+  or following the [official documentation](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#registry-secret-existing-credentials).
 - `${REGISTRY_USERNAME}` and `${REGISTRY_PASSWORD}` - In the case your private registry enables the basic auth mechanism, you need to include the username and password to be used for the private registry. You need to encode those in base64 format and replace the variables.
 - `${EDGE_CONTROL_PLANE_IP}` - The IP address to be used as a endpoint for the edge cluster (should match the kubeapi-server endpoint).
 - `${PRIVATE_REGISTRY_URL}` - The URL for the private registry to be used for the edge cluster (e.g `myregistry:5000`).
