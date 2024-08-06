@@ -19,6 +19,8 @@ export METAL3_RKE2CONTROLPLANENAMESPACE="rke2-control-plane-system"
 # Use "false" to avoid creating the ~/.cluster-api/clusterctl.yaml file
 # The upstream one is: registry.opensuse.org/isv/suse/edge/clusterapi/containerfile/suse
 export METAL3_CAPI_IMAGES="registry.suse.com/edge"
+export RANCHER_TURTLES_TARGETNAMESPACE="rancher-turtles-system"
+export RANCHER_TURTLES_VERSION="0.1.0+up0.9.1"
 
 ###########
 # RANCHER #
