@@ -45,37 +45,6 @@ if [ $(${KUBECTL} get pods -n ${RANCHER_CHART_TARGETNAMESPACE} -l app=rancher -o
   ${KUBECTL} wait --for=delete namespace/cattle-provisioning-capi-system --timeout=300s
 fi
 
-# Deploy CAPI
-if [ $(${KUBECTL} get pods -n ${METAL3_CAPISYSTEMNAMESPACE} -o name | wc -l) -lt 1 ]; then
-
-  # Try this command 3 times just in case, stolen from https://stackoverflow.com/a/33354419
-  if ! (r=3; while ! /opt/mgmt/bin/clusterctl init \
-    --core "cluster-api:v${METAL3_CAPICOREVERSION}"\
-    --infrastructure "metal3:v${METAL3_CAPIMETAL3VERSION}"\
-    --bootstrap "${METAL3_CAPIPROVIDER}:v${METAL3_CAPIRKE2VERSION}"\
-    --control-plane "${METAL3_CAPIPROVIDER}:v${METAL3_CAPIRKE2VERSION}"\
-    --config /root/cluster-api/clusterctl.yaml ; do
-            ((--r))||exit
-            echo "Something went wrong, let's wait 10 seconds and retry"
-            sleep 10;done) ; then
-      echo "clusterctl failed"
-      exit 1
-  fi
-
-  # Wait for capi-controller-manager
-  while ! ${KUBECTL} wait --for condition=ready -n ${METAL3_CAPISYSTEMNAMESPACE} $(${KUBECTL} get pods -n ${METAL3_CAPISYSTEMNAMESPACE} -l cluster.x-k8s.io/provider=cluster-api -o name) --timeout=10s; do sleep 2 ; done
-
-  # Wait for capm3-controller-manager, there are two pods, the ipam and the capm3 one, just wait for the first one
-  while ! ${KUBECTL} wait --for condition=ready -n ${METAL3_CAPM3NAMESPACE} $(${KUBECTL} get pods -n ${METAL3_CAPM3NAMESPACE} -l cluster.x-k8s.io/provider=infrastructure-metal3 -o name | head -n1 ) --timeout=10s; do sleep 2 ; done
-
-  # Wait for rke2-bootstrap-controller-manager
-  while ! ${KUBECTL} wait --for condition=ready -n ${METAL3_RKE2BOOTSTRAPNAMESPACE} $(${KUBECTL} get pods -n ${METAL3_RKE2BOOTSTRAPNAMESPACE} -l cluster.x-k8s.io/provider=bootstrap-rke2 -o name) --timeout=10s; do sleep 2 ; done
-
-  # Wait for rke2-control-plane-controller-manager
-  while ! ${KUBECTL} wait --for condition=ready -n ${METAL3_RKE2CONTROLPLANENAMESPACE} $(${KUBECTL} get pods -n ${METAL3_RKE2CONTROLPLANENAMESPACE} -l cluster.x-k8s.io/provider=control-plane-rke2 -o name) --timeout=10s; do sleep 2 ; done
-
-fi
-
 # Clean up the lock cm
 
 ${KUBECTL} delete configmap ${METAL3LOCKCMNAME} -n ${METAL3LOCKNAMESPACE}
