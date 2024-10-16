@@ -2,7 +2,7 @@
 # Management Cluster in a single-node setup
 
 This is an example of using Edge Image Builder (EIB) to generate a management cluster iso image for SUSE ATIP. The management cluster will contain the following components:
-- SUSE Linux Enterprise Micro 5.5 Kernel (SLE Micro)
+- SUSE Linux Micro 6.0 Kernel (SL Micro 6.0)
 - RKE2
 - CNI plugins (e.g. Multus, Cilium)
 - Rancher Prime
@@ -15,7 +15,6 @@ You need to modify the following values in the `mgmt-cluster-singlenode.yaml` fi
 
 - `${ROOT_PASSWORD}` - The root password for the management cluster. This could be generated using `openssl passwd -6 PASSWORD` and replacing PASSWORD with the desired password, and then replacing the value in the `mgmt-cluster-singlenode.yaml` file. The final rancher password will be configured based on the file `custom/files/basic-setup.sh`.
 - `${SCC_REGISTRATION_CODE}` - The registration code for the SUSE Customer Center for the SLE Micro product. This could be obtained from the SUSE Customer Center and replacing the value in the `mgmt-cluster-singlenode.yaml` file.
-- `${KUBERNETES_VERSION}` - The version of kubernetes to be used in the management cluster (e.g. `v1.28.8+rke2r1`).
 
 You need to modify the following values in the `network/mgmt-cluster-network.yaml` file :
 
@@ -38,7 +37,7 @@ You need to modify the following values in the `custom/scripts/99-register.sh` f
 
 You need to modify the following folder:
 
-- `base-images` - To include inside the `SLE-Micro.x86_64-5.5.0-Default-SelfInstall-GM2.install.iso` image downloaded from the SUSE Customer Center.
+- `base-images` - To include inside the `SL-Micro.x86_64-6.0-Default-SelfInstall-GM2.install.iso` image downloaded from the SUSE Customer Center.
 
 ## Optional modifications
 
@@ -90,7 +89,7 @@ where the ca-additional.crt is the certificate file that you want to use to prov
 ```
 $ cd telco-examples/mgmt-cluster/single-node
 $ sudo podman run --rm --privileged -it -v $PWD:/eib \
-registry.suse.com/edge/edge-image-builder:1.0.2 \
+registry.suse.com/edge/3.1/edge-image-builder:1.1.0 \
 build --definition-file mgmt-cluster-singlenode.yaml
 ```
 
