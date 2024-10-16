@@ -2,8 +2,8 @@ apiVersion: 1.0
 image:
   imageType: RAW
   arch: x86_64
-  baseImage: SLE-Micro.x86_64-5.5.0-Default-RT-GM.raw
-  outputImageName: eibimage-slemicro55rt-telco.raw
+  baseImage: SL-Micro.x86_64-6.0-Base-RT-GM2.raw
+  outputImageName: eibimage-slmicro60rt-telco.raw
 operatingSystem:
   time:
     timezone: America/New_York
@@ -13,16 +13,23 @@ operatingSystem:
   systemd:
     disable:
       - rebootmgr
+      - transactional-update.timer
+      - transactional-update-cleanup.timer
+      - cron
+      - fstrim
+      - time-sync.target
+      - ntpd
   users:
     - username: root
       encryptedPassword: ${ROOT_PASSWORD}
   packages:
     packageList:
       - jq
-      - dpdk22
-      - dpdk22-tools
+      - dpdk
+      - dpdk-tools
       - libdpdk-23
       - pf-bb-config
+      - open-iscsi
     additionalRepos:
-      - url: https://download.opensuse.org/repositories/isv:/SUSE:/Edge:/Telco/SLEMicro5.5/
+      - url: https://download.opensuse.org/repositories/isv:/SUSE:/Edge:/Telco/SL-Micro_6.0_images/
     sccRegistrationCode: ${SCC_REGISTRATION_CODE}

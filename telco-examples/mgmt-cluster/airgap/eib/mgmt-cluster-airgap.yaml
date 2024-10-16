@@ -2,7 +2,7 @@ apiVersion: 1.0
 image:
   imageType: iso
   arch: x86_64
-  baseImage: SL-Micro.x86_64-6.0-Base-SelfInstall-GM.install.iso
+  baseImage: SL-Micro.x86_64-6.0-Default-SelfInstall-GM2.install.iso
   outputImageName: eib-mgmt-cluster-image.iso
 operatingSystem:
   isoConfiguration:
@@ -13,9 +13,10 @@ operatingSystem:
   packages:
     packageList:
     - jq
+    - openssh-server-config-rootlogin
     sccRegistrationCode: ${SCC_REGISTRATION_CODE}
 kubernetes:
-  version: ${KUBERNETES_VERSION}
+  version: 1.30.3+rke2r1
   helm:
     charts:
       - name: cert-manager
@@ -65,7 +66,7 @@ kubernetes:
         createNamespace: true
         installationNamespace: kube-system
         valuesFile: rancher.yaml
-      - name: rancher-turtles
+      - name: rancher-turtles-chart
         version: 0.3.2
         repositoryName: suse-edge-charts
         targetNamespace: rancher-turtles-system

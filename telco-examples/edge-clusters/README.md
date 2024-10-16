@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This is an example to demonstrate how to deploy an edge cluster for Telco using SUSE ATIP and the Zero Touch Provisioning workflow.
+This is an example to demonstrate how to deploy an edge cluster for Telco using SUSE ATIP and the fully automated directed network provisioning.
 
 There are two steps to deploy an edge cluster:
 
@@ -27,7 +27,7 @@ You need to modify the following values in the `telco-edge-cluster.yaml` file:
 
 You need to modify the following folder:
 
-- `base-images` - To include inside the `SLE-Micro.x86_64-5.5.0-Default-RT-GM.raw` image downloaded from the SUSE Customer Center.
+- `base-images` - To include inside the `SL-Micro.x86_64-6.0-Base-RT-GM2.raw` image downloaded from the SUSE Customer Center.
 
 ### Building the Edge Cluster Image using EIB
 
@@ -38,7 +38,7 @@ All the following commands in this section could be executed using any linux lap
 ```
 $ cd telco-examples/edge-clusters
 $ sudo podman run --rm --privileged -it -v $PWD:/eib \
-registry.suse.com/edge/edge-image-builder:1.0.2 \
+registry.suse.com/edge/3.1/edge-image-builder:1.1.0 \
 build --definition-file telco-edge-cluster.yaml
 ```
 
@@ -112,11 +112,10 @@ The first thing is to modify the `telco-capi-single-node-sriov-auto.yaml` file a
 - `${ISOLATED_CPU_CORES}` - The isolated CPU cores to be used for workloads pinning some specific cpu cores. You could get that info using `lscpu` command to list the CPU cores and then, select the cores to be used for the edge cluster in case you need cpu pinning for your workloads. For example, `1-18,21-38` could be used for the isolated cores.
 - `${NON-ISOLATED_CPU_CORES}` - The cores listed could be used shared for the rest of the process running on the edge cluster. For example, `0,20,21,39` could be used for the non-isolated cores.
 - `${CPU_FREQUENCY}` - The frequency to be used for the CPU cores. For example, `2500000` represents 2.5Ghz configuration and it could be used to set the CPU cores to the max performance.
-- `${RKE2_VERSION}` - The RKE2 version to be used for the edge cluster. For example, `v1.28.3+rke2r1` could be used for the edge cluster.
 
 You can also modify any other parameter in the `telco-capi-single-node.yaml` file to match with your requirements e.g. DPDK configuration, number of VFs to generate, number of SRIOV interfaces, etc. This is basically a template to be used for the edge cluster deployment.
 
-** Note: Remember to locate the `eibimage-slemicro55rt-telco.raw` file generated in [Create the image for the edge cluster](#create-the-image-for-the-edge-cluster) into the management cluster httpd cache folder to be used during the edge cluster provision step.
+** Note: Remember to locate the `eibimage-slmicro60rt-telco.raw` file generated in [Create the image for the edge cluster](#create-the-image-for-the-edge-cluster) into the management cluster httpd cache folder to be used during the edge cluster provision step.
 
 Then, you need to apply the changes using the following command into the management cluster:
 
@@ -138,11 +137,10 @@ The first thing is to modify the `telco-capi-single-node.yaml` file and replace 
 - `${NON-ISOLATED_CPU_CORES}` - The cores listed could be used shared for the rest of the process running on the edge cluster. For example, `0,20,21,39` could be used for the non-isolated cores.
 - `${CPU_FREQUENCY}` - The frequency to be used for the CPU cores. For example, `2500000` represents 2.5Ghz configuration and it could be used to set the CPU cores to the max performance.
 - `${DPDK_PCI_ADDRESS}` - The PCI device to be used for the DPDK configuration. You could get that info using `lspci` command to list the PCI devices and then selecting the device to be used for the DPDK configuration. For example, `0000:00:1f.6` could be used for the DPDK configuration.
-- `${RKE2_VERSION}` - The RKE2 version to be used for the edge cluster. For example, `v1.28.3+rke2r1` could be used for the edge cluster.
 
 You can also modify any other parameter in the `telco-capi-single-node.yaml` file to match with your requirements e.g. DPDK configuration, number of VFs to generate, number of SRIOV interfaces, etc. This is basically a template to be used for the edge cluster deployment. 
 
-** Note: Remember to locate the `eibimage-slemicro55rt-telco.raw` file generated in [Create the image for the edge cluster](#create-the-image-for-the-edge-cluster) into the management cluster httpd cache folder to be used during the edge cluster provision step.
+** Note: Remember to locate the `eibimage-slmicro60rt-telco.raw` file generated in [Create the image for the edge cluster](#create-the-image-for-the-edge-cluster) into the management cluster httpd cache folder to be used during the edge cluster provision step.
 
 Then, you need to apply the changes using the following command into the management cluster:
 
@@ -201,9 +199,8 @@ Once the new Baremetal hosts are available, you need to provision the new hosts 
 The first thing is to modify the `telco-capi-metallb-multi-node.yaml` file and replace the following with your values:
 
 - `${EDGE_VIP_ADDRESS}` - The IP address to be used as a endpoint for the edge cluster (should be the VIP address reserved previously).
-- `${RKE2_VERSION}` - The RKE2 version to be used for the edge cluster. For example, `v1.28.3+rke2r1` could be used for the edge cluster.
 
-** Note: Remember to locate the `eibimage-slemicro55rt-telco.raw` file generated in [Create the image for the edge cluster](#create-the-image-for-the-edge-cluster) into the management cluster httpd cache folder to be used during the edge cluster provision step.
+** Note: Remember to locate the `eibimage-slmicro60rt-telco.raw` file generated in [Create the image for the edge cluster](#create-the-image-for-the-edge-cluster) into the management cluster httpd cache folder to be used during the edge cluster provision step.
 
 Then, you need to apply the changes using the following command into the management cluster:
 
