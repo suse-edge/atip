@@ -46,16 +46,14 @@ spec:
   serverConfig:
     cni: calico
     cniMultusEnable: true
+  preRKE2Commands:
+    - modprobe vfio-pci enable_sriov=1 disable_idle_d3=1
   agentConfig:
     format: ignition
     additionalUserData:
       config: |
         variant: fcos
         version: 1.4.0
-        passwd:
-          users:
-           - name: root
-             password_hash: "$y$j9T$/t4THH10B7esLiIVBROsE.$G1lyxfy/MoFVOrfXSnWAUq70Tf3mjfZBIe18koGOuXB"
         storage:
           files:
             - path: /var/lib/rancher/rke2/server/manifests/sriov-dp-daemonset.yaml
@@ -101,7 +99,7 @@ spec:
                         serviceAccountName: sriov-device-plugin
                         containers:
                         - name: kube-sriovdp
-                          image: rancher/hardened-sriov-network-device-plugin:v3.5.1-build20231009-amd64
+                          image: rancher/hardened-sriov-network-device-plugin:v3.7.0-build20240816
                           imagePullPolicy: IfNotPresent
                           args:
                           - --log-dir=sriovdp
@@ -202,22 +200,23 @@ spec:
         kernel_arguments:
           should_exist:
             - intel_iommu=on
-            - intel_pstate=passive
-            - processor.max_cstate=1
-            - intel_idle.max_cstate=0
             - iommu=pt
+            - idle=poll
             - mce=off
             - hugepagesz=1G hugepages=40
             - hugepagesz=2M hugepages=0
             - default_hugepagesz=1G
-            - kthread_cpus=${NON-ISOLATED_CPU_CORES}
             - irqaffinity=${NON-ISOLATED_CPU_CORES}
-            - isolcpus=${ISOLATED_CPU_CORES}
+            - isolcpus=domain,nohz,managed_irq,${ISOLATED_CPU_CORES}
             - nohz_full=${ISOLATED_CPU_CORES}
             - rcu_nocbs=${ISOLATED_CPU_CORES}
             - rcu_nocb_poll
-            - nosoftlockup 
+            - nosoftlockup
+            - nowatchdog
             - nohz=on
+            - nmi_watchdog=0 
+            - skew_tick=1
+            - quiet
         systemd:
           units:
             - name: rke2-preinstall.service
@@ -237,22 +236,6 @@ spec:
                 ExecStartPost=/bin/sh -c "umount /mnt"
                 [Install]
                 WantedBy=multi-user.target
-            - name: cpu-performance.service
-              enabled: true
-              contents: |
-                [Unit]
-                Description=CPU perfomance
-                Wants=network-online.target
-                After=network.target network-online.target
-                [Service]
-                User=root
-                Type=forking
-                TimeoutStartSec=900
-                ExecStart=/bin/sh -c "cpupower frequency-set -g performance; cpupower frequency-set -u ${CPU_FREQUENCY}; cpupower frequency-set -d ${CPU_FREQUENCY}"
-                RemainAfterExit=yes
-                KillMode=process
-                [Install]
-                WantedBy=multi-user.target
             - name: cpu-partitioning.service
               enabled: true
               contents: |
@@ -268,6 +251,19 @@ spec:
                 ExecStartPost=/bin/sh -c "systemctl enable tuned.service"
                 [Install]
                 WantedBy=multi-user.target
+            - name: performance-settings.service
+              enabled: true
+              contents: |
+                [Unit]
+                Description=performance-settings
+                Wants=network-online.target
+                After=network.target network-online.target cpu-partitioning.service
+                [Service]
+                Type=oneshot
+                User=root
+                ExecStart=/bin/sh -c "/opt/performance-settings/performance-settings.sh"
+                [Install]
+                WantedBy=multi-user.target
             - name: dpdk-vf-creation.service
               enabled: true
               contents: |
@@ -279,7 +275,6 @@ spec:
                 User=root
                 Type=forking
                 TimeoutStartSec=900
-                ExecStart=/bin/sh -c "modprobe vfio-pci enable_sriov=1 disable_idle_d3=1"
                 ExecStartPost=/bin/sh -c "dpdk-devbind.py -b vfio-pci ${DPDK_PCI_ADDRESS}"
                 ExecStartPost=/bin/sh -c "echo 1 > /sys/bus/pci/devices/${DPDK_PCI_ADDRESS}/sriov_numvfs"
                 ExecStartPost=/bin/sh -c "pf_bb_config ACC200 -v 00112233-4455-6677-8899-aabbccddeeff -c /opt/pf-bb-config/acc200_config_vf_5g.cfg; sleep 2"
@@ -327,14 +322,3 @@ spec:
         object: machine
       - key: local_hostname
         object: machine
-  networkData:
-    links:
-      ethernets:
-        - id: eth0
-          macAddress:
-            fromHostInterface: eth0
-          type: phy
-    networks:
-      ipv4DHCP:
-        - id: eth0
-          link: eth0
