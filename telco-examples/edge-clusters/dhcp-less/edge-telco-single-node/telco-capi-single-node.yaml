@@ -279,8 +279,7 @@ spec:
                 User=root
                 Type=forking
                 TimeoutStartSec=900
-                ExecStart=/bin/sh -c "modprobe vfio-pci enable_sriov=1 disable_idle_d3=1"
-                ExecStartPost=/bin/sh -c "dpdk-devbind.py -b vfio-pci ${DPDK_PCI_ADDRESS}"
+                ExecStart=/bin/sh -c "dpdk-devbind.py -b vfio-pci ${DPDK_PCI_ADDRESS}"
                 ExecStartPost=/bin/sh -c "echo 1 > /sys/bus/pci/devices/${DPDK_PCI_ADDRESS}/sriov_numvfs"
                 ExecStartPost=/bin/sh -c "pf_bb_config ACC200 -v 00112233-4455-6677-8899-aabbccddeeff -c /opt/pf-bb-config/acc200_config_vf_5g.cfg; sleep 2"
                 RemainAfterExit=yes

@@ -15,10 +15,8 @@ operatingSystem:
       - rebootmgr
       - transactional-update.timer
       - transactional-update-cleanup.timer
-      - cron
       - fstrim
       - time-sync.target
-      - ntpd
   users:
     - username: root
       encryptedPassword: ${ROOT_PASSWORD}
@@ -30,6 +28,9 @@ operatingSystem:
       - libdpdk-23
       - pf-bb-config
       - open-iscsi
+      - tuned
+      - cpupower
+      - openssh-server-config-rootlogin
     additionalRepos:
       - url: https://download.opensuse.org/repositories/isv:/SUSE:/Edge:/Telco/SL-Micro_6.0_images/
     sccRegistrationCode: ${SCC_REGISTRATION_CODE}
