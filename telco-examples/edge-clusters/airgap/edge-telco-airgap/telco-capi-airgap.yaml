@@ -70,7 +70,7 @@ spec:
         endpoint:
           - "https://$(PRIVATE_REGISTRY_URL)"
     configs:
-      "192.168.100.22:5000":
+      "$(PRIVATE_REGISTRY_URL)":
         authSecret:
           apiVersion: v1
           kind: Secret
