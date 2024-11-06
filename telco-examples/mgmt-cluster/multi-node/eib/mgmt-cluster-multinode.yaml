@@ -16,7 +16,7 @@ operatingSystem:
     - openssh-server-config-rootlogin
     sccRegistrationCode: ${SCC_REGISTRATION_CODE}
 kubernetes:
-  version: 1.30.3+rke2r1
+  version: v1.30.3+rke2r1
   helm:
     charts:
       - name: cert-manager
