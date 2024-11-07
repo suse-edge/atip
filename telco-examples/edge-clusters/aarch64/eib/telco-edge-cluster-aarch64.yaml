@@ -1,0 +1,35 @@
+apiVersion: 1.0
+image:
+  imageType: RAW
+  arch: aarch64
+  baseImage: SL-Micro.aarch64-6.1-Base-RT-GM.raw
+  outputImageName: eibimage-slmicro61rt-telco-arm.raw
+operatingSystem:
+  kernelArgs:
+    - ignition.platform.id=openstack
+    - net.ifnames=1
+  systemd:
+    disable:
+      - rebootmgr
+      - transactional-update.timer
+      - transactional-update-cleanup.timer
+      - fstrim
+      - time-sync.target
+  users:
+    - username: root
+      encryptedPassword: ${ROOT_PASSWORD}
+  packages:
+    packageList:
+      - policycoreutils-python-utils
+      - jq
+      - dpdk
+      - dpdk-tools
+      - libdpdk-23
+      - pf-bb-config
+      - open-iscsi
+      - tuned
+      - cpupower
+      - openssh-server-config-rootlogin
+    additionalRepos:
+      - url: https://download.opensuse.org/repositories/isv:/SUSE:/Edge:/Telco/SL-Micro_6.1_images/
+    sccRegistrationCode: ${SCC_REGISTRATION_CODE}

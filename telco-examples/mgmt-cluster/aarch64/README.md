@@ -1,7 +1,10 @@
+## Tech-Preview AARCH64 Integration (full e2e, mgmt-cluster and downstream clusters using aarch64 architecture)
 
-# Management Cluster in a single-node setup (air-gap scenario)
+This is an example to demonstrate how to deploy a management cluster for Telco using SUSE ATIP and the fully automated directed network provisioning using aarch64 architecture.
 
-This is an example of using Edge Image Builder (EIB) to generate a management cluster iso image for SUSE ATIP in an air-gap scenario. The management cluster will contain the following components:
+# Management Cluster in a single-node setup (aarch64)
+
+This is an example of using Edge Image Builder (EIB) to generate a management cluster iso image for SUSE ATIP. The management cluster will contain the following components:
 - SUSE Linux Micro 6.0 Kernel (SL Micro 6.0)
 - RKE2
 - CNI plugins (e.g. Multus, Cilium)
@@ -10,14 +13,12 @@ This is an example of using Edge Image Builder (EIB) to generate a management cl
 - Longhorn
 - Static IPs or DHCP network configuration
 - Metal3 and the CAPI provider
+- Aarch64 architecture
 
-You need to modify the following values in the `mgmt-cluster-airgap.yaml` file:
+You need to modify the following values in the `mgmt-cluster-arm-singlenode.yaml` file:
 
-- `${ROOT_PASSWORD}` - The root password for the management cluster. This could be generated using `openssl passwd -6 PASSWORD` and replacing PASSWORD with the desired password, and then replacing the value in the `mgmt-cluster-airgap.yaml` file. The final rancher password will be configured based on the file `custom/files/basic-setup.sh`.
-- `${SCC_REGISTRATION_CODE}` - The registration code for the SUSE Customer Center for the SLE Micro product. This could be obtained from the SUSE Customer Center and replacing the value in the `mgmt-cluster-airgap.yaml` file.
-
-> **_IMPORTANT:_**  
-> Keep in mind that the `embeddedArtifactRegistry` is a set of images based on a specific helm repositories version (rancher, metal3 and rke2-capi-provider). If you want to use a different version of the helm repositories, you need to modify the `embeddedArtifactRegistry` values in the `mgmt-cluster-airgap.yaml` file.
+- `${ROOT_PASSWORD}` - The root password for the management cluster. This could be generated using `openssl passwd -6 PASSWORD` and replacing PASSWORD with the desired password, and then replacing the value in the `mgmt-cluster-singlenode.yaml` file. The final rancher password will be configured based on the file `custom/files/basic-setup.sh`.
+- `${SCC_REGISTRATION_CODE}` - The registration code for the SUSE Customer Center for the SLE Micro product. This could be obtained from the SUSE Customer Center and replacing the value in the `mgmt-cluster-arm-singlenode.yaml` file.
 
 You need to modify the following values in the `network/mgmt-cluster-network.yaml` file :
 
@@ -32,12 +33,15 @@ You need to modify the `${MGMT_CLUSTER_IP}` with the Node IP in the following fi
 
 - `kubernetes/helm/values/rancher.yaml`
 
-> **_IMPORTANT:_**  
-> Note that the `custom/scripts/99-register.sh` file is not needed in this scenario.
+You need to modify the following values in the `custom/scripts/99-register.sh` file:
+
+- `${SCC_REGISTRATION_CODE}` - The registration code for the SUSE Customer Center for the SL Micro product. This could be obtained from the SUSE Customer Center and replacing the value in the `99-register.sh` file.
+
+- `${SCC_ACCOUNT_EMAIL}` - The email address for the SUSE Customer Center account. This could be obtained from the SUSE Customer Center and replacing the value in the `99-register.sh` file.
 
 You need to modify the following folder:
 
-- `base-images` - To include inside the `SL-Micro.x86_64-6.0-Default-SelfInstall-GM2.install.iso` image downloaded from the SUSE Customer Center.
+- `base-images` - To include inside the `SL-Micro.aarch64-6.0-Default-SelfInstall-GM.install.iso` image downloaded from the SUSE Customer Center.
 
 ## Optional modifications
 
@@ -80,11 +84,11 @@ where `ca-additional.crt` is the certificate file that you want to use to provid
 
 ## Building the Management Cluster Image using EIB
 
-1. Clone this repo and navigate to the `telco-examples/mgmt-cluster/airgap/eib` directory.
+1. Clone this repo and navigate to the `telco-examples/mgmt-cluster/aarch64/eib` directory:
 
-```bash 
+```bash
 $ git clone https://github.com/suse-edge/atip.git
-$ cd telco-examples/mgmt-cluster/airgap/eib
+$ cd telco-examples/mgmt-cluster/aarch64/eib
 ```
 
 2. Modify the files described above.
@@ -94,7 +98,7 @@ $ cd telco-examples/mgmt-cluster/airgap/eib
 ```bash
 $ sudo podman run --rm --privileged -it -v $PWD:/eib \
 registry.suse.com/edge/3.1/edge-image-builder:1.1.0 \
-build --definition-file mgmt-cluster-airgap.yaml
+build --definition-file mgmt-cluster-arm-singlenode.yaml
 ```
 
 ## Deploy the Management Cluster
