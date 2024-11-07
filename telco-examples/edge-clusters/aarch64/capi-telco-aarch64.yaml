@@ -1,0 +1,244 @@
+---
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: Cluster
+metadata:
+  name: test-cluster
+  namespace: default
+spec:
+  clusterNetwork:
+    pods:
+      cidrBlocks:
+        - 192.168.0.0/18
+    services:
+      cidrBlocks:
+        - 10.96.0.0/12
+  controlPlaneRef:
+    apiVersion: controlplane.cluster.x-k8s.io/v1alpha1
+    kind: RKE2ControlPlane
+    name: test-cluster
+  infrastructureRef:
+    apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+    kind: Metal3Cluster
+    name: test-cluster
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+kind: Metal3Cluster
+metadata:
+  name: test-cluster
+  namespace: default
+spec:
+  controlPlaneEndpoint:
+    host: ${EDGE_CONTROL_PLANE_IP}
+    port: 6443
+  noCloudProvider: true
+---
+apiVersion: controlplane.cluster.x-k8s.io/v1alpha1
+kind: RKE2ControlPlane
+metadata:
+  name: test-cluster
+  namespace: default
+spec:
+  infrastructureRef:
+    apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+    kind: Metal3MachineTemplate
+    name: test-cluster-controlplane
+  replicas: 1
+  serverConfig:
+    cni: calico
+    cniMultusEnable: true
+  preRKE2Commands:
+    - modprobe vfio-pci enable_sriov=1 disable_idle_d3=1
+  agentConfig:
+    format: ignition
+    additionalUserData:
+      config: |
+        variant: fcos
+        version: 1.4.0
+        storage:
+          files:
+            - path: /var/lib/rancher/rke2/server/manifests/configmap-sriov-custom-auto.yaml
+              overwrite: true
+              contents:
+                inline: |
+                  apiVersion: v1
+                  kind: ConfigMap
+                  metadata:
+                    name: sriov-custom-auto-config
+                    namespace: sriov-network-operator
+                  data:
+                    config.json: |
+                      config.json: |
+                      [
+                         {
+                           "resourceName": "${RESOURCE_NAME1}",
+                           "interface": "${SRIOV-NIC-NAME1}",
+                           "pfname": "${PF_NAME1}",
+                           "driver": "${DRIVER_NAME1}",
+                           "numVFsToCreate": ${NUM_VFS1}
+                         },
+                         {
+                           "resourceName": "${RESOURCE_NAME2}",
+                           "interface": "${SRIOV-NIC-NAME2}",
+                           "pfname": "${PF_NAME2}",
+                           "driver": "${DRIVER_NAME2}",
+                           "numVFsToCreate": ${NUM_VFS2}
+                         }
+                      ]
+              mode: 0644
+              user:
+                name: root
+              group:
+                name: root
+            - path: /var/lib/rancher/rke2/server/manifests/sriov-crd.yaml
+              overwrite: true
+              contents:
+                inline: |
+                  apiVersion: helm.cattle.io/v1
+                  kind: HelmChart
+                  metadata:
+                    name: sriov-crd
+                    namespace: kube-system
+                  spec:
+                    chart: oci://registry.suse.com/edge/3.1/sriov-crd-chart
+                    targetNamespace: sriov-network-operator
+                    version: 1.3.0
+                    createNamespace: true
+            - path: /var/lib/rancher/rke2/server/manifests/sriov-network-operator.yaml
+              overwrite: true
+              contents:
+                inline: |
+                  apiVersion: helm.cattle.io/v1
+                  kind: HelmChart
+                  metadata:
+                    name: sriov-network-operator
+                    namespace: kube-system
+                  spec:
+                    chart: oci://registry.suse.com/edge/3.1/sriov-network-operator-chart
+                    targetNamespace: sriov-network-operator
+                    version: 1.3.0
+                    createNamespace: true
+        kernel_arguments:
+          should_exist:
+            - intel_iommu=on
+            - iommu=pt
+            - idle=poll
+            - mce=off
+            - hugepagesz=1G hugepages=4
+            - hugepagesz=2M hugepages=0
+            - default_hugepagesz=1G
+            - irqaffinity=${NON_ISOLATED_CPU_CORES}
+            - isolcpus=domain,nohz,managed_irq,${ISOLATED_CPU_CORES}
+            - nohz_full=${ISOLATED_CPU_CORES}
+            - rcu_nocbs=${ISOLATED_CPU_CORES}
+            - rcu_nocb_poll
+            - nosoftlockup
+            - nowatchdog
+            - nohz=on
+            - nmi_watchdog=0
+            - skew_tick=1
+            - quiet
+        systemd:
+          units:
+            - name: rke2-preinstall.service
+              enabled: true
+              contents: |
+                [Unit]
+                Description=rke2-preinstall
+                Wants=network-online.target
+                Before=rke2-install.service
+                ConditionPathExists=!/run/cluster-api/bootstrap-success.complete
+                [Service]
+                Type=oneshot
+                User=root
+                ExecStartPre=/bin/sh -c "mount -L config-2 /mnt"
+                ExecStart=/bin/sh -c "sed -i \"s/BAREMETALHOST_UUID/$(jq -r .uuid /mnt/openstack/latest/meta_data.json)/\" /etc/rancher/rke2/config.yaml"
+                ExecStart=/bin/sh -c "echo \"node-name: $(jq -r .name /mnt/openstack/latest/meta_data.json)\" >> /etc/rancher/rke2/config.yaml"
+                ExecStartPost=/bin/sh -c "umount /mnt"
+                [Install]
+                WantedBy=multi-user.target
+            - name: cpu-partitioning.service
+              enabled: true
+              contents: |
+                [Unit]
+                Description=cpu-partitioning
+                Wants=network-online.target
+                After=network.target network-online.target
+                [Service]
+                Type=oneshot
+                User=root
+                ExecStart=/bin/sh -c "echo isolated_cores=${ISOLATED_CPU_CORES} > /etc/tuned/cpu-partitioning-variables.conf"
+                ExecStartPost=/bin/sh -c "tuned-adm profile cpu-partitioning"
+                ExecStartPost=/bin/sh -c "systemctl enable tuned.service"
+                [Install]
+                WantedBy=multi-user.target
+            - name: performance-settings.service
+              enabled: true
+              contents: |
+                [Unit]
+                Description=performance-settings
+                Wants=network-online.target
+                After=network.target network-online.target cpu-partitioning.service
+                [Service]
+                Type=oneshot
+                User=root
+                ExecStart=/bin/sh -c "/opt/performance-settings/performance-settings.sh"
+                [Install]
+                WantedBy=multi-user.target
+            - name: sriov-custom-auto-vfs.service
+              enabled: true
+              contents: |
+                [Unit]
+                Description=SRIOV Custom Auto VF Creation
+                Wants=network-online.target  rke2-server.target
+                After=network.target network-online.target rke2-server.target
+                [Service]
+                User=root
+                Type=forking
+                TimeoutStartSec=900
+                ExecStart=/bin/sh -c "while ! /var/lib/rancher/rke2/bin/kubectl --kubeconfig=/etc/rancher/rke2/rke2.yaml wait --for condition=ready nodes --all ; do sleep 2 ; done"
+                ExecStartPost=/bin/sh -c "while [ $(/var/lib/rancher/rke2/bin/kubectl --kubeconfig=/etc/rancher/rke2/rke2.yaml get sriovnetworknodestates.sriovnetwork.openshift.io --ignore-not-found --no-headers -A | wc -l) -eq 0 ]; do sleep 1; done"
+                ExecStartPost=/bin/sh -c "/opt/sriov/sriov-auto-filler.sh"
+                RemainAfterExit=yes
+                KillMode=process
+                [Install]
+                WantedBy=multi-user.target
+    kubelet:
+      extraArgs:
+        - provider-id=metal3://BAREMETALHOST_UUID
+    version: ${RKE2_VERSION}
+    nodeName: "localhost.localdomain"
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+kind: Metal3MachineTemplate
+metadata:
+  name: test-cluster-controlplane
+  namespace: default
+spec:
+  template:
+    spec:
+      dataTemplate:
+        name: test-cluster-controlplane-template
+      hostSelector:
+        matchLabels:
+          cluster-role: control-plane
+      image:
+        checksum: http://imagecache.local:8080/eibimage-slmicro61rt-telco-arm.raw.sha256
+        checksumType: sha256
+        format: raw
+        url: http://imagecache.local:8080/eibimage-slmicro61rt-telco-arm.raw
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+kind: Metal3DataTemplate
+metadata:
+  name: test-cluster-controlplane-template
+  namespace: default
+spec:
+  clusterName: test-cluster
+  metaData:
+    objectNames:
+      - key: name
+        object: machine
+      - key: local-hostname
+        object: machine
+      - key: local_hostname
+        object: machine
