@@ -12,7 +12,7 @@ spec:
       cidrBlocks:
         - 10.96.0.0/12
   controlPlaneRef:
-    apiVersion: controlplane.cluster.x-k8s.io/v1alpha1
+    apiVersion: controlplane.cluster.x-k8s.io/v1beta1
     kind: RKE2ControlPlane
     name: multinode-cluster
   infrastructureRef:
@@ -31,7 +31,7 @@ spec:
     port: 6443
   noCloudProvider: true
 ---
-apiVersion: controlplane.cluster.x-k8s.io/v1alpha1
+apiVersion: controlplane.cluster.x-k8s.io/v1beta1
 kind: RKE2ControlPlane
 metadata:
   name: multinode-cluster
@@ -42,7 +42,12 @@ spec:
     kind: Metal3MachineTemplate
     name: multinode-cluster-controlplane
   replicas: 3
-  registrationMethod: "address"
+  version: ${RKE2_VERSION}
+  rolloutStrategy:
+    type: "RollingUpdate"
+    rollingUpdate:
+      maxSurge: 0
+  registrationMethod: "control-plane-endpoint"
   registrationAddress: ${EDGE_VIP_ADDRESS}
   serverConfig:
     cni: cilium
@@ -158,7 +163,6 @@ spec:
     kubelet:
       extraArgs:
         - provider-id=metal3://BAREMETALHOST_UUID
-    version: ${RKE2_VERSION}
     nodeName: "Node-multinode-cluster"
 ---
 apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
