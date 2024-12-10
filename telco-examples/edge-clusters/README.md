@@ -11,7 +11,7 @@ There are two steps to deploy an edge cluster:
 
 Important notes:
 
-* In the following examples, we will assume that the management cluster is already deployed and running. If you want to deploy the management cluster, please refer to the [Management Cluster example](../mgmt-cluster).
+* In the following examples, we will assume that the management cluster is already deployed and running. If you want to deploy the management cluster, please refer to the [Management Cluster example](..//mgmt-cluster).
 * In the following examples, we are assuming that the edge cluster will use Baremetal Servers. If you want to deploy the full workflow using virtual machines, please refer to the [metal3-demo repo](https://github.com/suse-edge/metal3-demo)
 
 ## Create the image for the edge cluster

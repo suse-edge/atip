@@ -16,3 +16,5 @@ This repository contains some examples of how to deploy SUSE ATIP on different e
 - Air gap scenarios for management cluster
 - Additional cacerts to use external TLS file server for managment cluster (to server images over HTTPS)
 - Air gap scenarios for downstream clusters
+- CPU Manager scenarios
+- AARCH64 architecture (Tech Preview for full e2e, mgmt-cluster and downstream clusters using aarch64 architecture)

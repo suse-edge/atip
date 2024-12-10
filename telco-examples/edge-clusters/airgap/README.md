@@ -11,7 +11,7 @@ There are two steps to deploy an edge cluster:
 
 Important notes:
 
-* In the following examples, we will assume that the management cluster is already deployed and running. If you want to deploy the management cluster, please refer to the [Management Cluster example](../../mgmt-cluster).
+* In the following examples, we will assume that the management cluster is already deployed and running. If you want to deploy the management cluster, please refer to the [Management Cluster example](../../mgmt-cluster/airgap/README.md).
 * In the following examples, we are assuming that the edge cluster will use baremetal Servers. If you want to deploy the full workflow using virtual machines, please refer to the [metal3-demo repo](https://github.com/suse-edge/metal3-demo)
 * In the following examples, as we're creating an air-gap scenario, we are assuming that you have a local private registry deployed in the same network. 
 
@@ -111,7 +111,7 @@ All the following commands in this section could be executed on any x86_64 Linux
 #### Generate the image with our configuration for Telco profile
 
 ```
-$ cd telco-examples/edge-clusters
+$ cd telco-examples/edge-clusters/airgap/eib
 $ sudo podman run --rm --privileged -it -v $PWD:/eib \
 registry.suse.com/edge/3.1/edge-image-builder:1.1.0 \
 build --definition-file telco-edge-airgap-cluster.yaml

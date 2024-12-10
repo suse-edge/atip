@@ -89,7 +89,7 @@ data:
   ca-additional.crt: {{ additional_ca_cert | b64encode }}
 ```
 
-3. If you want to add the secret manually, then you can use the following command to create the secret:
+3. Alternatively, you can use the following command to create the secret manually:
 
 ```bash
 kubectl -n meta3-system create secret generic tls-ca-additional --from-file=ca-additional.crt=./ca-additional.crt
@@ -97,14 +97,18 @@ kubectl -n meta3-system create secret generic tls-ca-additional --from-file=ca-a
 
 ## Building the Management Cluster Image using EIB
 
-1. Clone this repo and navigate to the `telco-examples/mgmt-cluster/eib` directory.
+1. Clone this repo and navigate to the `telco-examples/mgmt-cluster/multi-node/eib` directory.
+
+```bash
+$ git clone https://github.com/suse-edge/atip.git
+$ cd telco-examples/mgmt-cluster/multi-node/eib
+```
 
 2. Modify the files described in the prerequisites section.
 
-3. The following command has to be executed from the parent directory where you have the `eib` directory cloned from this example (`mgmt-cluster`).
+3. Run the image building process.
 
-```
-$ cd telco-examples/mgmt-cluster/multi-node
+```bash
 $ sudo podman run --rm --privileged -it -v $PWD:/eib \
 registry.suse.com/edge/3.1/edge-image-builder:1.1.0 \
 build --definition-file mgmt-cluster-multinode.yaml
@@ -112,4 +116,4 @@ build --definition-file mgmt-cluster-multinode.yaml
 
 ## Deploy the Management Cluster
 
-Once you have the iso image built using EIB into the `eib` folder, you can use it to be deployed on a VM or a baremetal server.
+Once the build process is finished, you will find the modified ISO image in the `eib` directory. You can then proceed to provision a VM or a baremetal server with it.
