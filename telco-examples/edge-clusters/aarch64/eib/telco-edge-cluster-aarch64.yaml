@@ -30,6 +30,4 @@ operatingSystem:
       - tuned
       - cpupower
       - openssh-server-config-rootlogin
-    additionalRepos:
-      - url: https://download.opensuse.org/repositories/isv:/SUSE:/Edge:/Telco/SL-Micro_6.1_images/
     sccRegistrationCode: ${SCC_REGISTRATION_CODE}
