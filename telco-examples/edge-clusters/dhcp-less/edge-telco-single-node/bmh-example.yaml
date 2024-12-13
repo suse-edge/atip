@@ -20,6 +20,7 @@ stringData:
       type: ethernet
       state: up
       mtu: 1500
+      identifier: mac-address
       mac-address: "${CONTROLPLANE_MAC}"
       ipv4:
         address:
@@ -40,7 +41,7 @@ stringData:
 apiVersion: metal3.io/v1alpha1
 kind: BareMetalHost
 metadata:
-  name: flexran-demo
+  name: example-demo
   labels:
     cluster-role: control-plane
 spec:

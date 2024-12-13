@@ -40,7 +40,7 @@ stringData:
 apiVersion: metal3.io/v1alpha1
 kind: BareMetalHost
 metadata:
-  name: airgap-demo
+  name: example-demo
   labels:
     cluster-role: control-plane
 spec:
