@@ -11,7 +11,7 @@ data:
 apiVersion: metal3.io/v1alpha1
 kind: BareMetalHost
 metadata:
-  name: flexran-demo
+  name: example-demo
   labels:
     cluster-role: control-plane
 spec:
