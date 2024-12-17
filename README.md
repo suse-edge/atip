@@ -11,8 +11,8 @@ This repository contains some examples of how to deploy SUSE ATIP on different e
 
 - Single-node Clusters
 - Multi-node Clusters
-- DHCP Network scenarios
-- DHCP-less Network scenarios
+- DHCP Network scenarios, single or dual-stack
+- DHCP-less Network scenarios, single or dual-stack
 - Air gap scenarios for management cluster
 - Additional cacerts to use external TLS file server for managment cluster (to server images over HTTPS)
 - Air gap scenarios for downstream clusters
