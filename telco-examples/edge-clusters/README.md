@@ -44,12 +44,23 @@ build --definition-file telco-edge-cluster.yaml
 
 ## Deploy the Edge Clusters
 
-All the following steps have to be executed from the management cluster in order to deploy the edge clusters.
-There are two different examples:
+Once the image has been built, an Edge cluster can be deployed from the management cluster by leveraging one of the examples available in this repository, which cover different possible scenarios and requirements, from single node cluster, to multi-node and clusters with telco specific network configurations and tuning.
+We recommend starting from the following two examples (also detailed below):
 - [Example 1 - Deploy a single-node Edge Cluster with the image generated and Telco profiles](#example-1---deploy-a-single-node-edge-cluster-with-the-image-generated-and-telco-profiles): In this example we will demostrate how to deploy a single-node edge cluster using the image generated in the previous step and the telco profiles configured in order to use telco capabilities like SRIOV, DPDK, CPU pinning and so on.
 - [Example 2 - Deploy a multi-node HA cluster using metal3, metallb and the image generated](#example-2---deploy-a-multi-node-ha-cluster-using-metal3-metallb-and-the-image-generated): In this example we will demostrate how to deploy a multi-node edge cluster using metal3, metallb and the image generated in the previous step.
 
-For both examples, there are 2 options available to be used depending on your environment:
+Additional examples cover the use of IPv4 and IPv6, or IPv6 only, and can be found following the link for the required combination:
+
+|           |                       Single Node                      |                    Single Node                   | Multi-node | Multi-node |
+|-----------|:------------------------------------------------------:|:------------------------------------------------:|:----------:|:----------:|
+|           |                       Dual-stack                       |                     IPv6 only                    | Dual-stack |  IPv6 only |
+| DHCP      |    [README](./dhcp/dual-stack/single-node/README.md)   |    [README](./dhcp/ipv6/single-node/README.md)   |     WIP    |     WIP    |
+| DHCP-less | [README](./dhcp-less/dual-stack/single-node/README.md) | [README](./dhcp-less/ipv6/single-node/README.md) |     WIP    |     WIP    |
+
+**Note**: multi-node examples are currently being worked on and will be available soon.
+
+
+For all the examples, there are 2 options available to be used depending on your environment:
 
 - DHCP Environment: In case you are using a DHCP environment, you need to use the `telco-examples/edge-clusters/dhcp` folder.
 - Advanced Network configuration: In case you are using a DHCP-less or advanced networking like VLAN, bond, etc..., you need to use the `telco-examples/edge-clusters/dhcp-less` folder.
@@ -64,6 +75,8 @@ There are 2 steps to deploy a single-node edge cluster with all Telco Capabiliti
   - `telco-capi-single-node-sriov-auto.yaml`: This manifest is a template to be used in case you don't have the deep knowledge of the network interfaces. You will only need to know the interface name, and the number of VFs to be used.
 
 The prefered option is to use the `telco-capi-single-node-sriov-auto.yaml` manifest, but in case you have the deep knowledge of the network interfaces or you need to use FEC accelerator card, you could use the `telco-capi-single-node.yaml` manifest.
+
+All the following steps have to be executed from the management cluster in order to deploy the edge clusters.
 
 #### Enroll the new Baremetal host
 
