@@ -1,6 +1,6 @@
-# SUSE ATIP
+# SUSE Edge for Telco examples
 
-This repository contains some examples of how to deploy SUSE ATIP on different environments.
+This repository contains some examples of how to deploy SUSE Edge for Telco (formerly known as ATIP) in different environments.
 
 ##  Components
 
@@ -8,6 +8,8 @@ This repository contains some examples of how to deploy SUSE ATIP on different e
 - [Edge Cluster](./telco-examples/edge-clusters)
 
 ## Scenarios
+
+Note that ipv6, dual-stack and aarch64 scenarios are currently tech-preview and not yet fully supported.
 
 - Single-node Clusters
 - Multi-node Clusters
