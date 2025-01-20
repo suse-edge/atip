@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This is an example to demonstrate how to deploy an air-gap downstream/edge cluster for Telco using SUSE ATIP and the fully automated directed network provisioning.
+This is an example to demonstrate how to deploy an air-gap downstream/edge cluster using SUSE Edge for Telco (formerly known as ATIP) and the fully automated directed network provisioning.
 
 There are two steps to deploy an edge cluster:
 
@@ -37,7 +37,7 @@ You need to modify the following folder:
 The following steps are required to prepare the airgap artifacts:
 
 1.Include the rke2 release images to the `custom/files` folder to be consumed by EIB during the build process. 
-  - You can use the [following script](https://github.com/suse-edge/fleet-examples/blob/release-3.1/scripts/day2/edge-save-rke2-images.sh) and the list of images [here](https://github.com/suse-edge/fleet-examples/blob/release-3.1/scripts/day2/edge-release-rke2-images.txt) to generate the artifacts required to be included in `custom/files`. 
+  - You can use the [following script](https://github.com/suse-edge/fleet-examples/blob/release-3.2/scripts/day2/edge-save-rke2-images.sh) and the list of images [here](https://github.com/suse-edge/fleet-examples/blob/release-3.2/scripts/day2/edge-release-rke2-images.txt) to generate the artifacts required to be included in `custom/files`. 
   ```
   $ ./edge-save-rke2-images.sh -o ~/telco-examples/edge-clusters/airgap/eib/custom/files -l ~/edge-release-rke2-images.txt
   ...
@@ -56,52 +56,52 @@ The following steps are required to prepare the airgap artifacts:
   - You need to create a list with the Helm charts required for the edge cluster. For example, for telco scenarios, you can use the following list:
     ``` 
     $ cat > edge-release-helm-oci-artifacts.txt <<EOF
-    edge/sriov-network-operator-chart:1.3.0
-    edge/sriov-crd-chart:1.3.0
+    edge/sriov-network-operator-chart:302.0.0+up1.4.0
+    edge/sriov-crd-chart:302.0.0+up1.4.0
     EOF
     ```
-  - Using the [following script](https://github.com/suse-edge/fleet-examples/blob/release-3.1/scripts/day2/edge-save-oci-artefacts.sh) and the list created above, you can generate a tarball containing all necessary Helm charts locally.
+  - Using the [following script](https://github.com/suse-edge/fleet-examples/blob/release-3.2/scripts/day2/edge-save-oci-artefacts.sh) and the list created above, you can generate a tarball containing all necessary Helm charts locally.
     ```
     $ ./edge-save-oci-artefacts.sh -al ./edge-release-helm-oci-artifacts.txt -s registry.suse.com
-    Pulled: registry.suse.com/edge/sriov-network-operator-chart:1.3.0
-    Pulled: registry.suse.com/edge/sriov-crd-chart:1.3.0
-    a edge-release-oci-tgz-20241016
-    a edge-release-oci-tgz-20241016/sriov-network-operator-chart-1.3.0.tgz
-    a edge-release-oci-tgz-20241016/sriov-crd-chart-1.3.0.tgz
+    Pulled: registry.suse.com/edge/sriov-network-operator-chart:302.0.0+up1.4.0
+    Pulled: registry.suse.com/edge/sriov-crd-chart:302.0.0+up1.4.0
+    a edge-release-oci-tgz-20250120
+    a edge-release-oci-tgz-20250120/sriov-network-operator-chart-302.0.0+up1.4.0.tgz
+    a edge-release-oci-tgz-20250120/sriov-crd-chart-302.0.0+up1.4.0.tgz
     ```
-  - Upload your tarball to your private registry to preload with the helm chart oci images downloaded using the [following script](https://github.com/suse-edge/fleet-examples/blob/release-3.1/scripts/day2/edge-load-oci-artefacts.sh):
+  - Upload your tarball to your private registry to preload with the helm chart oci images downloaded using the [following script](https://github.com/suse-edge/fleet-examples/blob/release-3.2/scripts/day2/edge-load-oci-artefacts.sh):
     ```
-    $ tar zxvf edge-release-oci-tgz-20241016.tgz
-    $ ./edge-load-oci-artefacts.sh -ad edge-release-oci-tgz-20241016 -r myregistry:5000
+    $ tar zxvf edge-release-oci-tgz-20250120.tgz
+    $ ./edge-load-oci-artefacts.sh -ad edge-release-oci-tgz-20250120 -r myregistry:5000
     ```
 
 3. Preload your registry with the necessary container images (including your workload ones) required for the edge cluster. 
-  - In this example, we need to include the sriov container images for telco workload (you can get the images from the [helm-chart values](https://github.com/suse-edge/charts/blob/main/charts/sriov-network-operator/1.3.0/values.yaml))
+  - In this example, we need to include the sriov container images for telco workload (you can get the images from the [helm-chart values](https://github.com/suse-edge/charts/blob/main/charts/sriov-network-operator/1.4.0/values.yaml))
     ``` 
     $ cat > edge-release-images.txt <<EOF
-    rancher/hardened-sriov-network-operator:v1.3.0-build20240816
-    rancher/hardened-sriov-network-config-daemon:v1.3.0-build20240816
-    rancher/hardened-sriov-cni:v2.8.1-build20240820
-    rancher/hardened-ib-sriov-cni:v1.1.1-build20240816
-    rancher/hardened-sriov-network-device-plugin:v3.7.0-build20240816
-    rancher/hardened-sriov-network-resources-injector:v1.6.0-build20240816
-    rancher/hardened-sriov-network-webhook:v1.3.0-build20240816
+    rancher/hardened-sriov-network-operator:v1.4.0-build20241113
+    rancher/hardened-sriov-network-config-daemon:v1.4.0-build20241113
+    rancher/hardened-sriov-cni:v2.8.1-build20241113
+    rancher/hardened-ib-sriov-cni:v1.1.1-build20241113
+    rancher/hardened-sriov-network-device-plugin:v3.8.0-build20241114
+    rancher/hardened-sriov-network-resources-injector:v1.6.0-build20241113
+    rancher/hardened-sriov-network-webhook:v1.4.0-build20241113
     EOF
     ```
-  - Using the [following script](https://github.com/suse-edge/fleet-examples/blob/release-3.1/scripts/day2/edge-save-images.sh) and the list created above, you can generate in local the tarball with the images required for the edge cluster.
+  - Using the [following script](https://github.com/suse-edge/fleet-examples/blob/release-3.2/scripts/day2/edge-save-images.sh) and the list created above, you can generate in local the tarball with the images required for the edge cluster.
     ```
     $ ./edge-save-images.sh -l ./edge-release-images.txt -s registry.suse.com
-    Image pull success: registry.suse.com/rancher/hardened-sriov-network-operator:v1.3.0-build20240816
-    Image pull success: registry.suse.com/rancher/hardened-sriov-network-config-daemon:v1.3.0-build20240816
-    Image pull success: registry.suse.com/rancher/hardened-sriov-cni:v2.8.1-build20240820
-    Image pull success: registry.suse.com/rancher/hardened-ib-sriov-cni:v1.1.1-build20240816
-    Image pull success: registry.suse.com/rancher/hardened-sriov-network-device-plugin:v3.7.0-build20240816
-    Image pull success: registry.suse.com/rancher/hardened-sriov-network-resources-injector:v1.6.0-build20240816
-    Image pull success: registry.suse.com/rancher/hardened-sriov-network-webhook:v1.3.0-build20240816
+    Image pull success: registry.suse.com/rancher/hardened-sriov-network-operator:v1.4.0-build20241113
+    Image pull success: registry.suse.com/rancher/hardened-sriov-network-config-daemon:v1.4.0-build20241113
+    Image pull success: registry.suse.com/rancher/hardened-sriov-cni:v2.8.1-build20241113
+    Image pull success: registry.suse.com/rancher/hardened-ib-sriov-cni:v1.1.1-build20241113
+    Image pull success: registry.suse.com/rancher/hardened-sriov-network-device-plugin:v3.8.0-build20241114
+    Image pull success: registry.suse.com/rancher/hardened-sriov-network-resources-injector:v1.6.0-build20241113
+    Image pull success: registry.suse.com/rancher/hardened-sriov-network-webhook:v1.4.0-build20241113
     Creating edge-images.tar.gz with 7 images
     ```
     
-  - Upload your tarball to your private registry to preload with the images downloaded in the previous step using the [following script](https://github.com/suse-edge/fleet-examples/blob/release-3.1/scripts/day2/edge-load-images.sh)
+  - Upload your tarball to your private registry to preload with the images downloaded in the previous step using the [following script](https://github.com/suse-edge/fleet-examples/blob/release-3.2/scripts/day2/edge-load-images.sh)
 
 
 ### Building the Edge Cluster Image using EIB
@@ -113,7 +113,7 @@ All the following commands in this section could be executed on any x86_64 Linux
 ```
 $ cd telco-examples/edge-clusters/airgap/eib
 $ sudo podman run --rm --privileged -it -v $PWD:/eib \
-registry.suse.com/edge/3.1/edge-image-builder:1.1.0 \
+registry.suse.com/edge/3.2/edge-image-builder:1.1.0 \
 build --definition-file telco-edge-airgap-cluster.yaml
 ```
 
@@ -182,8 +182,8 @@ The first thing is to modify the `telco-capi-airgap.yaml` file and replace the f
 - `${PF_NAME1}` - The network interface or physical function (usually filters in the network interface) to be used for the SRIOV.
 - `${DRIVER_NAME1}` - The driver to be used for the interface and VFs (e.g `vfio-pci`).
 - `${NUM_VFS1}` - The number of VFs to be created for the network interface (e.g `2`).
-- `${SRIOV_CRD_VERSION}` - The version of the SRIOV CRD chart to be used for the edge cluster, for example `1.3.0`.
-- `${SRIOV_OPERATOR_VERSION}` - The version of the SRIOV Operator chart to be used for the edge cluster, for example, `1.3.0`.
+- `${SRIOV_CRD_VERSION}` - The version of the SRIOV CRD chart to be used for the edge cluster, for example `302.0.0+up1.4.0`.
+- `${SRIOV_OPERATOR_VERSION}` - The version of the SRIOV Operator chart to be used for the edge cluster, for example, `302.0.0+up1.4.0`.
 - `${ISOLATED_CPU_CORES}` - The isolated CPU cores to be used for workloads pinning some specific ones. You could get that info using `lscpu` command to list the CPU cores and then, select the cores to be used for the edge cluster in case you need CPU pinning for your workloads. For example, `1-18,21-38` could be used for the isolated cores.
 - `${NON-ISOLATED_CPU_CORES}` - The cores listed could be used shared for the rest of the process running on the edge cluster. For example, `0,20,21,39` could be used for the non-isolated cores.
 - `${CPU_FREQUENCY}` - The frequency to be used for the CPU cores. For example, `2500000` represents 2.5Ghz configuration and it could be used to set the CPU cores to the max performance.
