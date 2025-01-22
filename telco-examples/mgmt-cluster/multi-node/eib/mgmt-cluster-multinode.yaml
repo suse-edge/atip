@@ -27,47 +27,47 @@ kubernetes:
         createNamespace: true
         installationNamespace: kube-system
       - name: longhorn-crd
-        version: 104.2.0+up1.7.1
-        repositoryName: rancher-charts
+        version: 105.1.0+up1.7.2
+        repositoryName: rancher
         targetNamespace: longhorn-system
         createNamespace: true
         installationNamespace: kube-system
       - name: longhorn
-        version: 104.2.0+up1.7.1
-        repositoryName: rancher-charts
+        version: 105.1.0+up1.7.2
+        repositoryName: rancher
         targetNamespace: longhorn-system
         createNamespace: true
         installationNamespace: kube-system
       - name: metal3-chart
-        version: 0.8.1
+        version: 302.0.0+up0.9.0
         repositoryName: suse-edge-charts
         targetNamespace: metal3-system
         createNamespace: true
         installationNamespace: kube-system
         valuesFile: metal3.yaml
       - name: neuvector-crd
-        version: 104.0.1+up2.7.9
-        repositoryName: rancher-charts
+        version: 105.0.0+up2.8.3
+        repositoryName: rancher
         targetNamespace: neuvector
         createNamespace: true
         installationNamespace: kube-system
         valuesFile: neuvector.yaml
       - name: neuvector
-        version: 104.0.1+up2.7.9
-        repositoryName: rancher-charts
+        version: 105.0.0+up2.8.3
+        repositoryName: rancher
         targetNamespace: neuvector
         createNamespace: true
         installationNamespace: kube-system
         valuesFile: neuvector.yaml
       - name: rancher
-        version: 2.9.1
+        version: 2.10.1
         repositoryName: rancher-prime
         targetNamespace: cattle-system
         createNamespace: true
         installationNamespace: kube-system
         valuesFile: rancher.yaml
       - name: rancher-turtles-chart
-        version: 0.3.2
+        version: 302.0.0+up0.14.1
         repositoryName: suse-edge-charts
         targetNamespace: rancher-turtles-system
         createNamespace: true
@@ -75,10 +75,10 @@ kubernetes:
     repositories:
       - name: jetstack
         url: https://charts.jetstack.io
-      - name: rancher-charts
-        url: https://charts.rancher.io/
+      - name: rancher
+        url: https://charts.rancher.io
       - name: suse-edge-charts
-        url: oci://registry.suse.com/edge
+        url: oci://registry.suse.com/edge/3.2
       - name: rancher-prime
         url: https://charts.rancher.com/server-charts/prime
     network:

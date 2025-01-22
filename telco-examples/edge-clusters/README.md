@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This is an example to demonstrate how to deploy an edge cluster for Telco using SUSE ATIP and the fully automated directed network provisioning.
+This is an example to demonstrate how to deploy an edge cluster using SUSE Edge for Telco (formerly known as ATIP) and the fully automated directed network provisioning.
 
 There are two steps to deploy an edge cluster:
 
@@ -38,7 +38,7 @@ All the following commands in this section could be executed using any linux lap
 ```
 $ cd telco-examples/edge-clusters
 $ sudo podman run --rm --privileged -it -v $PWD:/eib \
-registry.suse.com/edge/3.1/edge-image-builder:1.1.0 \
+registry.suse.com/edge/3.2/edge-image-builder:1.1.0 \
 build --definition-file telco-edge-cluster.yaml
 ```
 

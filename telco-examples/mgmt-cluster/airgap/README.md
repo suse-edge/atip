@@ -1,7 +1,7 @@
 
 # Management Cluster in a single-node setup (air-gap scenario)
 
-This is an example of using Edge Image Builder (EIB) to generate a management cluster iso image for SUSE ATIP in an air-gap scenario. The management cluster will contain the following components:
+This is an example of using Edge Image Builder (EIB) to generate a management cluster iso image for SUSE Edge for Telco (formerly known as ATIP) in an air-gap scenario. The management cluster will contain the following components:
 - SUSE Linux Micro 6.0 Kernel (SL Micro 6.0)
 - RKE2
 - CNI plugins (e.g. Multus, Cilium)
@@ -93,7 +93,7 @@ $ cd telco-examples/mgmt-cluster/airgap/eib
 
 ```bash
 $ sudo podman run --rm --privileged -it -v $PWD:/eib \
-registry.suse.com/edge/3.1/edge-image-builder:1.1.0 \
+registry.suse.com/edge/3.2/edge-image-builder:1.1.0 \
 build --definition-file mgmt-cluster-airgap.yaml
 ```
 

@@ -1,10 +1,10 @@
 ## Tech-Preview AARCH64 Integration (full e2e, mgmt-cluster and downstream clusters using aarch64 architecture)
 
-This is an example to demonstrate how to deploy a management cluster for Telco using SUSE ATIP and the fully automated directed network provisioning using aarch64 architecture.
+This is an example to demonstrate how to deploy a management cluster for Telco using SUSE Edge for Telco (formerly known as ATIP) and the fully automated directed network provisioning using aarch64 architecture.
 
 # Management Cluster in a single-node setup (aarch64)
 
-This is an example of using Edge Image Builder (EIB) to generate a management cluster iso image for SUSE ATIP. The management cluster will contain the following components:
+This is an example of using Edge Image Builder (EIB) to generate a management cluster iso image for SUSE Edge for Telco. The management cluster will contain the following components:
 - SUSE Linux Micro 6.0 Kernel (SL Micro 6.0)
 - RKE2
 - CNI plugins (e.g. Multus, Cilium)
@@ -41,7 +41,7 @@ You need to modify the following values in the `custom/scripts/99-register.sh` f
 
 You need to modify the following folder:
 
-- `base-images` - To include inside the `SL-Micro.aarch64-6.0-Default-SelfInstall-GM.install.iso` image downloaded from the SUSE Customer Center.
+- `base-images` - To include inside the `SL-Micro.aarch64-6.0-Default-SelfInstall-GM2.install.iso` image downloaded from the SUSE Customer Center.
 
 ## Optional modifications
 
@@ -97,7 +97,7 @@ $ cd telco-examples/mgmt-cluster/aarch64/eib
 
 ```bash
 $ sudo podman run --rm --privileged -it -v $PWD:/eib \
-registry.suse.com/edge/3.1/edge-image-builder:1.1.0 \
+registry.suse.com/edge/3.2/edge-image-builder:1.1.0 \
 build --definition-file mgmt-cluster-arm-singlenode.yaml
 ```
 

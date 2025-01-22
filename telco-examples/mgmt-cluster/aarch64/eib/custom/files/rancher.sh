@@ -32,6 +32,7 @@ fi
 
 # Wait for rancher to be deployed
 while ! ${KUBECTL} wait --for condition=ready -n ${RANCHER_CHART_TARGETNAMESPACE} $(${KUBECTL} get pods -n ${RANCHER_CHART_TARGETNAMESPACE} -l app=rancher -o name) --timeout=10s; do sleep 2 ; done
+until ${KUBECTL} get ingress -n ${RANCHER_CHART_TARGETNAMESPACE} rancher > /dev/null 2>&1; do sleep 10; done
 
 RANCHERBOOTSTRAPPASSWORD=$(${KUBECTL} get secret -n ${RANCHER_CHART_TARGETNAMESPACE} bootstrap-secret -o jsonpath='{.data.bootstrapPassword}' | base64 -d)
 RANCHERHOSTNAME=$(${KUBECTL} get ingress -n ${RANCHER_CHART_TARGETNAMESPACE} rancher -o jsonpath='{.spec.rules[0].host}')
@@ -48,13 +49,13 @@ if [ -z $(${KUBECTL} get settings.management.cattle.io first-login -ojsonpath='{
   done
 
   # Set password
-  curl -sk ${RANCHERHOSTNAME}/v3/users?action=changepassword -H 'content-type: application/json' -H "Authorization: Bearer $TOKEN" -d "{\"currentPassword\":\"${RANCHERBOOTSTRAPPASSWORD}\",\"newPassword\":\"${RANCHER_FINALPASSWORD}\"}"
+  curl -sk -L ${RANCHERHOSTNAME}/v3/users?action=changepassword -H 'content-type: application/json' -H "Authorization: Bearer $TOKEN" -d "{\"currentPassword\":\"${RANCHERBOOTSTRAPPASSWORD}\",\"newPassword\":\"${RANCHER_FINALPASSWORD}\"}"
 
   # Create a temporary API token (ttl=60 minutes)
   APITOKEN=$(curl -sk ${RANCHERHOSTNAME}/v3/token -H 'content-type: application/json' -H "Authorization: Bearer ${TOKEN}" -d '{"type":"token","description":"automation","ttl":3600000}' | jq -r .token)
 
-  curl -sk ${RANCHERHOSTNAME}/v3/settings/server-url -H 'content-type: application/json' -H "Authorization: Bearer ${APITOKEN}" -X PUT -d "{\"name\":\"server-url\",\"value\":\"${RANCHERHOSTNAME}\"}"
-  curl -sk ${RANCHERHOSTNAME}/v3/settings/telemetry-opt -X PUT -H 'content-type: application/json' -H 'accept: application/json' -H "Authorization: Bearer ${APITOKEN}" -d '{"value":"out"}'
+  curl -sk -L ${RANCHERHOSTNAME}/v3/settings/server-url -H 'content-type: application/json' -H "Authorization: Bearer ${APITOKEN}" -X PUT -d "{\"name\":\"server-url\",\"value\":\"${RANCHERHOSTNAME}\"}"
+  curl -sk -L ${RANCHERHOSTNAME}/v3/settings/telemetry-opt -X PUT -H 'content-type: application/json' -H 'accept: application/json' -H "Authorization: Bearer ${APITOKEN}" -d '{"value":"out"}'
 fi
 
 # Clean up the lock cm
