@@ -79,7 +79,5 @@ kubernetes:
         url: https://charts.rancher.io/
       - name: suse-edge-upstream
         url: https://suse-edge.github.io/charts
-      - name: suse-edge-charts
-        url: oci://registry.suse.com/edge/3.2
       - name: rancher-prime
         url: https://charts.rancher.com/server-charts/prime
