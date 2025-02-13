@@ -2,6 +2,9 @@
 
 This is an example to demonstrate how to deploy a management cluster for Telco using SUSE Edge for Telco (formerly known as ATIP) and the fully automated directed network provisioning using aarch64 architecture.
 
+> [!WARNING]  
+> This is a tech-preview feature. It requires both management cluster and downstream cluster to use the same aarch64 architecture, SL Micro 6.1 and Metal3 chart to be at least 0.9.1
+
 # Management Cluster in a single-node setup (aarch64)
 
 This is an example of using Edge Image Builder (EIB) to generate a management cluster iso image for SUSE Edge for Telco. The management cluster will contain the following components:

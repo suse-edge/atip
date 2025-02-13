@@ -2,6 +2,9 @@
 
 This is a tech-preview example to demonstrate how to deploy an edge cluster for Telco using SUSE ATIP and the fully automated directed network provisioning using aarch64 architecture.
 
+> [!WARNING]  
+> This is a tech-preview feature. It requires both management cluster and downstream cluster to use the same aarch64 architecture, SL Micro 6.1 and Metal3 chart to be at least 0.9.1
+
 ## Introduction
 
 This is an example to demonstrate how to deploy an edge cluster for Telco using SUSE ATIP and the fully automated directed network provisioning using aaarch64 architecture.
