@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: worker-node3-example-credentials
+type: Opaque
+data:
+  username: ${BMC_NODE3_USERNAME}
+  password: ${BMC_NODE3_PASSWORD}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: worker-node3-networkdata
+type: Opaque
+stringData:
+  networkData: |
+    interfaces:
+    - name: ${WORKER3_INTERFACE}
+      type: ethernet
+      state: up
+      mtu: 1500
+      identifier: mac-address
+      mac-address: "${WORKER3_MAC}"
+      ipv4:
+        address:
+        - ip:  "${WORKER3_IP}"
+          prefix-length: "${WORKER3_PREFIX}"
+        enabled: true
+        dhcp: false
+    dns-resolver:
+      config:
+        server:
+        - "${DNS_SERVER}"
+    routes:
+      config:
+      - destination: 0.0.0.0/0
+        next-hop-address: "${WORKER3_GATEWAY}"
+        next-hop-interface: ${WORKER3_INTERFACE}
+---
+apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  name: worker-node3-example
+  labels:
+    cluster-role: worker
+    nodepool: nodepool-0
+spec:
+  online: true
+  bootMACAddress: ${BMC_NODE3_MAC}
+  bmc:
+    address: ${BMC_NODE3_ADDRESS}
+    disableCertificateVerification: true
+    credentialsName: worker-node3-example-credentials
+  preprovisioningNetworkDataName: worker-node3-networkdata
