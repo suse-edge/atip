@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: node1-example-credentials
+  name: worker-node1-example-credentials
 type: Opaque
 data:
   username: ${BMC_NODE1_USERNAME}
@@ -10,13 +10,14 @@ data:
 apiVersion: metal3.io/v1alpha1
 kind: BareMetalHost
 metadata:
-  name: node1-example
+  name: worker-node1-example
   labels:
-    cluster-role: control-plane
+    cluster-role: worker
+    nodepool: nodepool-0
 spec:
   online: true
   bootMACAddress: ${BMC_NODE1_MAC}
   bmc:
     address: ${BMC_NODE1_ADDRESS}
     disableCertificateVerification: true
-    credentialsName: node1-example-credentials
+    credentialsName: worker-node1-example-credentials

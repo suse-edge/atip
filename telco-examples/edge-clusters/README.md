@@ -47,7 +47,7 @@ build --definition-file telco-edge-cluster.yaml
 Once the image has been built, an Edge cluster can be deployed from the management cluster by leveraging one of the examples available in this repository, which cover different possible scenarios and requirements, from single node cluster, to multi-node and clusters with telco specific network configurations and tuning.
 We recommend starting from the following two examples (also detailed below):
 - [Example 1 - Deploy a single-node Edge Cluster with the image generated and Telco profiles](#example-1---deploy-a-single-node-edge-cluster-with-the-image-generated-and-telco-profiles): In this example we will demostrate how to deploy a single-node edge cluster using the image generated in the previous step and the telco profiles configured in order to use telco capabilities like SRIOV, DPDK, CPU pinning and so on.
-- [Example 2 - Deploy a multi-node HA cluster using metal3, metallb and the image generated](#example-2---deploy-a-multi-node-ha-cluster-using-metal3-metallb-and-the-image-generated): In this example we will demostrate how to deploy a multi-node edge cluster using metal3, metallb and the image generated in the previous step.
+- [Example 2 - Deploy a multi-node HA cluster using metal3, metallb and the image generated](#example-2---deploy-a-multi-node-ha-cluster-using-metal3-metallb-and-the-image-generated): In this example we will demostrate how to deploy a multi-node edge cluster using metal3, metallb and the image generated in the previous step (multi-node with/without workers nodes). 
 
 Additional examples cover the use of IPv4 and IPv6, or IPv6 only, and can be found following the link for the required combination:
 
@@ -164,16 +164,22 @@ $ kubectl apply -f telco-capi-single-node.yaml
 
 ### Example 2 - Deploy a multi-node HA cluster using metal3, metallb and the image generated
 
-There are 2 steps to deploy a multi-node edge cluster:
+There are 2 examples to be used for the multi-node edge cluster deployment:
+- multi-node with 3 control-plane replicas and 0 workers nodes (only control-plane).
+- multi-node with 3 control-plane replicas and 3 workers nodes (control-plane + workers).
 
-- Enroll the 3 Baremetal hosts in the management cluster.
+For all of them, there are 2 steps to deploy a multi-node edge cluster:
+
+- Enroll the 3 Baremetal hosts for the control plane nodes in the management cluster. In the case you want to deploy workers nodes, you will need to enroll also the 3 Baremetal hosts for the worker nodes in the management cluster (in total 6 Baremetal hosts).
 - Provision the new hosts using the CAPI manifests and the image generated in the previous step.
+
+**Note**: The examples are provided with 3 Baremetal hosts for the workers nodes, but you can modify the number of Baremetal hosts to be used for the workers nodes.
 
 #### Enroll the new Baremetal host
 
-Using the folder `telco-examples/dhcp/edge-metallb-multi-node` or `telco-examples/dhcp-less/edge-metallb-multi-node` (depending on your use case related to dhcp or static ips), we will create the components required to deploy a multi-node edge cluster with 3 control-plane replicas, using the image generated in the previous step and metallb as a load balancer.
+Using the folder `telco-examples/dhcp/edge-metallb-multi-node` or `telco-examples/dhcp-less/edge-metallb-multi-node` (depending on your use case related to dhcp or static ips), we will create the components required to deploy a multi-node edge cluster (with/without worker nodes), using the image generated in the previous step and metallb as a load balancer.
 
-The first step is to enroll the new Baremetal hosts in the management cluster. To do that, you need to modify the `bmh-node1-example.yaml` file and replace the following with your values:
+The first step is to enroll the new Baremetal hosts in the management cluster. To do that, you need to modify the `bmh-cp-node1-example.yaml` file and replace the following with your values:
 
 - `${BMC_NODE1_USERNAME}` - The username for the BMC of the first Baremetal host.
 - `${BMC_NODE1_PASSWORD}` - The password for the BMC of the first Baremetal host.
@@ -189,14 +195,22 @@ In case you want to use a dhcp-less environment, you will need to configure and 
 - `${CONTROLPLANE1_MAC}` - The MAC address to be used for the control plane interface (e.g `00:0c:29:3e:3e:3e`).
 - `${DNS_SERVER}` - The DNS to be used for the edge cluster (e.g `192.168.100.2`).
 
-You need to replace the same variables (change the values respectively) for the second and third Baremetal hosts in the `bmh-node2-example.yaml` and `bmh-node3-example.yaml` files.
+You need to replace the same variables (change the values respectively) for the second and third Baremetal hosts in the `bmh-cp-node2-example.yaml` and `bmh-cp-node3-example.yaml` files.
 
 Then, you need to apply the changes using the following command into the management cluster:
 
 ```
-$ kubectl apply -f bmh-node1-example.yaml 
-$ kubectl apply -f bmh-node2-example.yaml 
-$ kubectl apply -f bmh-node3-example.yaml
+$ kubectl apply -f bmh-cp-node1-example.yaml 
+$ kubectl apply -f bmh-cp-node2-example.yaml 
+$ kubectl apply -f bmh-cp-node3-example.yaml
+```
+
+In case you want to deploy workers nodes, you will need to enroll also the Baremetal hosts for the worker nodes. To do that, you need to modify the `bmh-worker-node1-example.yaml` file and replace the same values as the Baremetal hosts for the control plane nodes, but in this case replacing the workers variables. Then you can apply the changes using the following command into the management cluster:
+
+```
+$ kubectl apply -f bmh-worker-node1-example.yaml
+$ kubectl apply -f bmh-worker-node2-example.yaml
+$ kubectl apply -f bmh-worker-node3-example.yaml
 ```
 
 The new Baremetal hosts will be enrolled changing the state from registering to inspecting and available. You could check the status using the following command:
@@ -209,7 +223,7 @@ $ kubectl get bmh -owide
 
 Once the new Baremetal hosts are available, you need to provision the new hosts using the CAPI manifests and the image generated in the previous step.
 
-The first thing is to modify the `telco-capi-metallb-multi-node.yaml` file and replace the following with your values:
+The first thing is to modify the `telco-capi-metallb-multi-node.yaml` or `telco-capi-metallb-multi-node-with-workers.yaml` file and replace the following with your values:
 
 - `${EDGE_VIP_ADDRESS}` - The IP address to be used as a endpoint for the edge cluster (should be the VIP address reserved previously).
 
@@ -218,5 +232,12 @@ The first thing is to modify the `telco-capi-metallb-multi-node.yaml` file and r
 Then, you need to apply the changes using the following command into the management cluster:
 
 ```
-$ kubectl apply -f telco-capi-single-node.yaml
+$ kubectl apply -f telco-capi-metallb-multi-node.yaml
 ```
+
+or the following command in case you want to deploy the multi-node with workers nodes:
+
+```
+$ kubectl apply -f telco-capi-metallb-multi-node-with-workers.yaml
+```
+

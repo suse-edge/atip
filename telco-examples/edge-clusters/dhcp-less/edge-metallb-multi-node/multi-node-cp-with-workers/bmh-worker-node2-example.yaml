@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: node2-example-credentials
+  name: worker-node2-example-credentials
 type: Opaque
 data:
   username: ${BMC_NODE2_USERNAME}
@@ -10,21 +10,21 @@ data:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: controlplane-2-networkdata
+  name: worker-node2-networkdata
 type: Opaque
 stringData:
   networkData: |
     interfaces:
-    - name: ${CONTROLPLANE2_INTERFACE}
+    - name: ${WORKER2_INTERFACE}
       type: ethernet
       state: up
       mtu: 1500
       identifier: mac-address
-      mac-address: "${CONTROLPLANE2_MAC}"
+      mac-address: "${WORKER2_MAC}"
       ipv4:
         address:
-        - ip:  "${CONTROLPLANE2_IP}"
-          prefix-length: "${CONTROLPLANE2_PREFIX}"
+        - ip:  "${WORKER2_IP}"
+          prefix-length: "${WORKER2_PREFIX}"
         enabled: true
         dhcp: false
     dns-resolver:
@@ -34,20 +34,21 @@ stringData:
     routes:
       config:
       - destination: 0.0.0.0/0
-        next-hop-address: "${CONTROLPLANE2_GATEWAY}"
-        next-hop-interface: ${CONTROLPLANE2_INTERFACE}
+        next-hop-address: "${WORKER2_GATEWAY}"
+        next-hop-interface: ${WORKER2_INTERFACE}
 ---
 apiVersion: metal3.io/v1alpha1
 kind: BareMetalHost
 metadata:
-  name: node2-example
+  name: worker-node2-example
   labels:
-    cluster-role: control-plane
+    cluster-role: worker
+    nodepool: nodepool-0
 spec:
   online: true
   bootMACAddress: ${BMC_NODE2_MAC}
   bmc:
     address: ${BMC_NODE2_ADDRESS}
     disableCertificateVerification: true
-    credentialsName: node2-example-credentials
-  preprovisioningNetworkDataName: controlplane-2-networkdata
+    credentialsName: worker-node2-example-credentials
+  preprovisioningNetworkDataName: worker-node2-networkdata
