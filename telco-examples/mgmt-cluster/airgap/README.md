@@ -9,7 +9,7 @@ This is an example of using Edge Image Builder (EIB) to generate a management cl
 - Neuvector
 - Longhorn
 - Static IPs or DHCP network configuration
-- Metal3 and the CAPI provider
+- Metal3 and the CAPI provider (if you want to add support for aarch64 architecture, the changes will be explained in `Optional modifications` section of this document)
 
 You need to modify the following values in the `mgmt-cluster-airgap.yaml` file:
 
@@ -40,6 +40,21 @@ You need to modify the following folder:
 - `base-images` - To include inside the `SL-Micro.x86_64-6.0-Default-SelfInstall-GM2.install.iso` image downloaded from the SUSE Customer Center.
 
 ## Optional modifications
+
+### Add aarch64 architecture support
+
+This is an optional step to add aarch64 architecture support to the management cluster to deploy aarch64 downstream clusters.
+
+1. Modify the helm chart values file for metal3 `kubernetes/helm/values/metal3.yaml` to set the following values:
+
+```yaml
+global:
+  deployArchitecture: arm64
+```
+
+Once you set this value, the management cluster will be able to deploy only aarch64 downstream clusters.
+This is a limitation of the current implementation of the metal3 chart where you can only deploy one architecture at a time.
+NOTE: This limitation will be solved in a future version. 
 
 ### Add certificates to use HTTPS server to provide images using TLS
 
