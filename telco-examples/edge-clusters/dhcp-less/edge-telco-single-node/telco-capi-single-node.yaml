@@ -60,10 +60,6 @@ spec:
       config: |
         variant: fcos
         version: 1.4.0
-        passwd:
-          users:
-           - name: root
-             password_hash: "$y$j9T$/t4THH10B7esLiIVBROsE.$G1lyxfy/MoFVOrfXSnWAUq70Tf3mjfZBIe18koGOuXB"
         storage:
           files:
             - path: /var/lib/rancher/rke2/server/manifests/sriov-dp-daemonset.yaml
@@ -311,10 +307,10 @@ spec:
         matchLabels:
           cluster-role: control-plane
       image:
-        checksum: http://imagecache.local:8080/eibimage-slemicro55rt-telco.raw.sha256
+        checksum: http://imagecache.local:8080/eibimage-slemicro-rt-telco.raw.sha256
         checksumType: sha256
         format: raw
-        url: http://imagecache.local:8080/eibimage-slemicro55rt-telco.raw
+        url: http://imagecache.local:8080/eibimage-slemicro-rt-telco.raw
 ---
 apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
 kind: Metal3DataTemplate

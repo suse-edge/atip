@@ -88,10 +88,10 @@ spec:
         matchLabels:
           cluster-role: control-plane
       image:
-        checksum: http://imagecache.local:8080/eibimage-slmicro61rt-telco-arm.raw.sha256
+        checksum: http://imagecache.local:8080/eibimage-slmicro-rt-telco-arm.raw.sha256
         checksumType: sha256
         format: raw
-        url: http://imagecache.local:8080/eibimage-slmicro61rt-telco-arm.raw
+        url: http://imagecache.local:8080/eibimage-slmicro-rt-telco-arm.raw
 ---
 apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
 kind: Metal3DataTemplate

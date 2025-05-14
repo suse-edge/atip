@@ -71,9 +71,8 @@ global:
   deployArchitecture: arm64
 ```
 
-Once you set this value, the management cluster will be able to deploy only aarch64 downstream clusters.
-This is a limitation of the current implementation of the metal3 chart where you can only deploy one architecture at a time.
-NOTE: This limitation will be solved in a future version.
+Once you set this value, the management cluster will be able to deploy **exclusively** aarch64 downstream clusters.
+NOTE: This is a limitation of the current implementation of the metal3 chart where you can only deploy one architecture at a time. It will be solved in a future version.
 
 ### Add certificates to use HTTPS server to provide images using TLS
 
