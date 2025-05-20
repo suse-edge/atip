@@ -60,7 +60,7 @@ kubernetes:
         installationNamespace: kube-system
         valuesFile: neuvector.yaml
       - name: rancher
-        version: v2.10.1
+        version: 2.10.1
         repositoryName: rancher-prime
         targetNamespace: cattle-system
         createNamespace: true
