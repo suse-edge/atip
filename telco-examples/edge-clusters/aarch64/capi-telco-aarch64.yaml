@@ -99,9 +99,9 @@ spec:
                     name: sriov-crd
                     namespace: kube-system
                   spec:
-                    chart: oci://registry.suse.com/edge/3.2/sriov-crd-chart
+                    chart: oci://registry.suse.com/edge/charts/sriov-crd
                     targetNamespace: sriov-network-operator
-                    version: 302.0.0+up1.4.0
+                    version: 303.0.2+up1.5.0
                     createNamespace: true
             - path: /var/lib/rancher/rke2/server/manifests/sriov-network-operator.yaml
               overwrite: true
@@ -113,9 +113,9 @@ spec:
                     name: sriov-network-operator
                     namespace: kube-system
                   spec:
-                    chart: oci://registry.suse.com/edge/3.2/sriov-network-operator-chart
+                    chart: oci://registry.suse.com/edge/charts/sriov-network-operator
                     targetNamespace: sriov-network-operator
-                    version: 302.0.0+up1.4.0
+                    version: 303.0.2+up1.5.0
                     createNamespace: true
         kernel_arguments:
           should_exist:

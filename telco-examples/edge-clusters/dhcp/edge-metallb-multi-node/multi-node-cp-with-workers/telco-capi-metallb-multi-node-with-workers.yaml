@@ -93,9 +93,9 @@ spec:
                     name: endpoint-copier-operator
                     namespace: kube-system
                   spec:
-                    chart: oci://registry.suse.com/edge/3.2/endpoint-copier-operator-chart
+                    chart: oci://registry.suse.com/edge/charts/endpoint-copier-operator
                     targetNamespace: endpoint-copier-operator
-                    version: 302.0.0+up0.2.1
+                    version: 303.0.0+up0.2.1
                     createNamespace: true
             - path: /var/lib/rancher/rke2/server/manifests/metallb.yaml
               overwrite: true
@@ -107,9 +107,9 @@ spec:
                     name: metallb
                     namespace: kube-system
                   spec:
-                    chart: oci://registry.suse.com/edge/3.2/metallb-chart
+                    chart: oci://registry.suse.com/edge/charts/metallb
                     targetNamespace: metallb-system
-                    version: 302.0.0+up0.14.9
+                    version: 303.0.0+up0.14.9
                     createNamespace: true
 
             - path: /var/lib/rancher/rke2/server/manifests/metallb-cr.yaml
