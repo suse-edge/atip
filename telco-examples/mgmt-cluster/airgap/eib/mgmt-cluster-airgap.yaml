@@ -72,7 +72,8 @@ kubernetes:
         targetNamespace: rancher-turtles-system
         createNamespace: true
         installationNamespace: kube-system
-      - name: rancher-turtles-airgap-resources-chart
+        valuesFile: turtles.yaml
+      - name: rancher-turtles-airgap-resources
         version: 303.0.2+up0.19.0
         repositoryName: suse-edge-charts
         targetNamespace: rancher-turtles-system
@@ -130,3 +131,4 @@ embeddedArtifactRegistry:
     - name: registry.suse.com/rancher/cluster-api-provider-rke2-controlplane:v0.15.1
     - name: registry.suse.com/rancher/hardened-sriov-network-operator:v1.5.0-build20250425
     - name: registry.suse.com/rancher/ip-address-manager:v1.9.4
+    - name: registry.rancher.com/rancher/kubectl:v1.32.2
