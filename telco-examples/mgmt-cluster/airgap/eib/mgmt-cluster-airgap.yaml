@@ -38,6 +38,7 @@ kubernetes:
         targetNamespace: longhorn-system
         createNamespace: true
         installationNamespace: kube-system
+        valuesFile: longhorn.yaml
       - name: metal3
         version: 303.0.7+up0.11.5
         repositoryName: suse-edge-charts
@@ -131,3 +132,4 @@ embeddedArtifactRegistry:
     - name: registry.suse.com/rancher/hardened-sriov-network-operator:v1.5.0-build20250425
     - name: registry.suse.com/rancher/ip-address-manager:v1.9.4
     - name: registry.rancher.com/rancher/kubectl:v1.32.2
+    - name: registry.rancher.com/rancher/mirrored-cluster-api-controller:v1.9.5

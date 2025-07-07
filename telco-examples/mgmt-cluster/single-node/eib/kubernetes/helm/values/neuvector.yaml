@@ -12,3 +12,7 @@ k3s:
   enabled: true
 crdwebhook:
   enabled: false
+registry: "registry.rancher.com"
+global:
+  cattle:
+    systemDefaultRegistry: "registry.rancher.com"
