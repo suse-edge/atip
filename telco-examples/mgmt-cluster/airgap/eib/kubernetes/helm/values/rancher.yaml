@@ -1,4 +1,6 @@
 hostname: ${MGMT_CLUSTER_IP}
 bootstrapPassword: "foobar"
 replicas: 1
-global.cattle.psp.enabled: "false"
+global:
+  cattle:
+    systemDefaultRegistry: "registry.rancher.com"

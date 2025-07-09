@@ -1,4 +1,6 @@
 hostname: rancher-${INGRESS_VIP}.sslip.io
 bootstrapPassword: "foobar"
 replicas: 1
-global.cattle.psp.enabled: "false"
+global:
+  cattle:
+    systemDefaultRegistry: "registry.rancher.com"
