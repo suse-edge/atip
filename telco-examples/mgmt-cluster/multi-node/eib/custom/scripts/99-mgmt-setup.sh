@@ -2,7 +2,7 @@
 
 # Copy the scripts from combustion to the final location
 mkdir -p /opt/mgmt/bin/
-for script in basic-setup.sh rancher.sh metal3.sh; do
+for script in basic-setup.sh rancher.sh metal3.sh check-node-ready-state.sh; do
 	cp ${script} /opt/mgmt/bin/
 done
 
