@@ -41,6 +41,18 @@ RANCHERHOSTNAME=$(${KUBECTL} get ingress -n ${RANCHER_CHART_TARGETNAMESPACE} ran
 if [ -z $(${KUBECTL} get settings.management.cattle.io first-login -ojsonpath='{.value}') ]; then
   # Add the protocol
   RANCHERHOSTNAME="https://${RANCHERHOSTNAME}"
+
+  # Wait for Rancher API to be ready
+  while true; do
+    STATUS=$(curl -sk -o /dev/null -w '%{http_code}' ${RANCHERHOSTNAME}/v3-public)
+    if [ "$STATUS" -eq 200 ]; then
+      break
+    fi
+    sleep 10
+    echo "Waiting for Rancher API to be ready..."
+  done
+
+  # Now attempt to get the token
   TOKEN=""
   while [ -z "${TOKEN}" ]; do
     # Get token
