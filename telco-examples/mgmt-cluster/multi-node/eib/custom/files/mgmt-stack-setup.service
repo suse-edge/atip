@@ -14,12 +14,14 @@ TimeoutStartSec=1800
 
 ExecStartPre=/bin/sh -c "echo 'Setting up Management components...'"
 # Scripts are executed in StartPre because Start can only run a single on
+ExecStartPre=/opt/mgmt/bin/check-node-ready-state.sh
 ExecStartPre=/opt/mgmt/bin/rancher.sh
 ExecStartPre=/opt/mgmt/bin/metal3.sh
 ExecStart=/bin/sh -c "echo 'Finished setting up Management components'"
 RemainAfterExit=yes
 KillMode=process
 # Disable & delete everything
+ExecStartPost=rm -f /opt/mgmt/bin/check-node-ready-state.sh
 ExecStartPost=rm -f /opt/mgmt/bin/rancher.sh
 ExecStartPost=rm -f /opt/mgmt/bin/metal3.sh
 ExecStartPost=rm -f /opt/mgmt/bin/basic-setup.sh
