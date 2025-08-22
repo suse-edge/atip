@@ -41,6 +41,36 @@ RANCHERHOSTNAME=$(${KUBECTL} get ingress -n ${RANCHER_CHART_TARGETNAMESPACE} ran
 if [ -z $(${KUBECTL} get settings.management.cattle.io first-login -ojsonpath='{.value}') ]; then
   # Add the protocol
   RANCHERHOSTNAME="https://${RANCHERHOSTNAME}"
+
+  # Wait for Rancher API to be ready
+  TIMEOUT=900
+  # Get the start time
+  START_TIME=$(date +%s)
+  
+  # Starting validation for Rancher API with 15m timeout
+  while true; do
+    # Calculate elapsed time
+    CURRENT_TIME=$(date +%s)
+    ELAPSED_TIME=$((CURRENT_TIME - START_TIME))
+  
+    # Check if the timeout has been reached
+    if [ "$ELAPSED_TIME" -ge "$TIMEOUT" ]; then
+      echo "API hasn't become responsive after 15 minutes, exiting." >&2
+      exit 1
+    fi
+    
+    # Test API
+    STATUS=$(curl -sk -o /dev/null -w '%{http_code}' "${RANCHERHOSTNAME}/v3-public")
+    if [ "$STATUS" -eq 200 ]; then
+      echo "Rancher API is ready."
+      break
+    fi
+  
+    sleep 10
+    echo "Waiting for Rancher API to be ready... ($ELAPSED_TIME seconds elapsed)"
+  done
+
+  # Now attempt to get the token
   TOKEN=""
   while [ -z "${TOKEN}" ]; do
     # Get token
