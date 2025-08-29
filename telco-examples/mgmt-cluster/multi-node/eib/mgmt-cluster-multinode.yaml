@@ -82,16 +82,16 @@ kubernetes:
         url: oci://registry.suse.com/edge/charts
       - name: rancher-prime
         url: https://charts.rancher.com/server-charts/prime
-    network:
-      apiHost: ${API_HOST}
-      apiVIP: ${API_VIP}
-    nodes:
-      - hostname: mgmt-cluster1
-        initializer: true
-        type: server
-      - hostname: mgmt-cluster2
-        initializer: true
-        type: server
-      - hostname: mgmt-cluster3
-        initializer: true
-        type: server
+  network:
+    apiHost: ${API_HOST}
+    apiVIP: ${API_VIP}
+  nodes:
+    - hostname: mgmt-cluster1
+      initializer: true
+      type: server
+    - hostname: mgmt-cluster2
+      initializer: true
+      type: server
+    - hostname: mgmt-cluster3
+      initializer: true
+      type: server
