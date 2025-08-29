@@ -90,8 +90,6 @@ kubernetes:
       initializer: true
       type: server
     - hostname: mgmt-cluster2
-      initializer: true
       type: server
     - hostname: mgmt-cluster3
-      initializer: true
       type: server
