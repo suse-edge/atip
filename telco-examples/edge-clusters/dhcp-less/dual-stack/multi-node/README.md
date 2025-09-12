@@ -3,7 +3,7 @@
 ## Introduction
 
 This directory contains some sample CAPI manifest files that enable the creation of Edge clusters where the bare metal hosts, and the executing containers on top, are connected through both IPv4 and IPv6, with the following characteristics:
-- single host cluster
+- multi host cluster
 - statically assigned configuration for IPv4
 - statically assigned configuration for IPv6
 
@@ -27,10 +27,10 @@ A sample BMH definitions can be found within the `bmh-example.yaml` file. Before
 **Note**:
  * When RAs and DHCPs are available on the network segment, the above network configuration will only apply to the provisioned BMH and not yet on the inspection phase of the host to gather hardware information. This is due to a bug that will force the use of DHCP and RA for IPv4 and IPv6 respectively with the default settings; a resolution is expected soon.
 
-Once the required BMH file has been selected and refined, in order for it to work, it must also be filled with some values common to all the BMH definitions in addition to the network specific ones previously mentioned. For more information on these values or on how to enroll a Bare Metal Host, please refer to the main Edge Cluster documentation for single host deployments [here](https://github.com/suse-edge/atip/tree/main/telco-examples/edge-clusters#example-1---deploy-a-single-node-edge-cluster-with-the-image-generated-and-telco-profiles).
+Once the required BMH file has been selected and refined, in order for it to work, it must also be filled with some values common to all the BMH definitions in addition to the network specific ones previously mentioned. For more information on these values or on how to enroll a Bare Metal Host, please refer to the main Edge Cluster documentation for multi host deployments [here](https://github.com/suse-edge/atip/tree/main/telco-examples/edge-clusters#example-2---deploy-a-multi-node-ha-cluster-using-metal3-metallb-and-the-image-generated).
 
 
 ## Cluster definitions
 
-The required cluster manifests are shared with the DHCP examples, please refer to [this section](../../../dhcp/dual-stack/single-node/README.md#Cluster-definitions).
+The required cluster manifests are shared with the DHCP examples, please refer to [this section](../../../dhcp/dual-stack/multi-node/README.md#Cluster-definitions).
 

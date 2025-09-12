@@ -83,7 +83,6 @@ spec:
                 WantedBy=multi-user.target
         storage:
           files:
-            # https://docs.rke2.io/networking/multus_sriov#using-multus-with-cilium
             - path: /var/lib/rancher/rke2/server/manifests/rke2-cilium-config.yaml
               overwrite: true
               contents:
