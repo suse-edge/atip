@@ -26,6 +26,7 @@ The BMH definitions can be found within the `bmh-example_*.yaml` files. While th
          - `${DNS_SERVER_V4}` and/or `${DNS_SERVER_V6}` - the IP address(es) of the DNS server(s) to use, as a single or multiple entries; both IPv4 and/or IPv6 addresses can be specified
 
 **Note**:
+ * When multiple hosts are deployed, each host needs the data above to be unique and specific to it.
  * Due to limitations in [nmstate](https://nmstate.io/devel/yaml_api.html#ipv6-autoconf), it is not possible to enable SLAAC but disable DHCPv6; for this reason DHCP will always be enabled in the provided examples.
  * The network configuration will only apply to the provisioned BMH and not yet on the inspection phase of the host to gather hardware information. This is due to a bug that will force the use of DHCP and RA for IPv4 and IPv6 respectively with the default settings; a resolution is expected soon.
 
