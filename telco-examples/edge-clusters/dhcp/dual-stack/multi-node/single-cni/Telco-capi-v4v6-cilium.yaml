@@ -50,7 +50,6 @@ spec:
     rollingUpdate:
       maxSurge: 0
   registrationMethod: "control-plane-endpoint"
-  registrationAddress: ${EDGE_CONTROL_PLANE_IP_V4}
   serverConfig:
     cni: cilium
     tlsSan:
@@ -83,19 +82,12 @@ spec:
                 WantedBy=multi-user.target
         storage:
           files:
-            - path: /var/lib/rancher/rke2/server/manifests/rke2-cilium-config.yaml
+            - path: /var/lib/rancher/rke2/agent/etc/resolv.conf
               overwrite: true
               contents:
                 inline: |
-                  apiVersion: helm.cattle.io/v1
-                  kind: HelmChartConfig
-                  metadata:
-                    name: rke2-cilium
-                    namespace: kube-system
-                  spec:
-                    valuesContent: |-
-                      cni:
-                        exclusive: false
+                  nameserver 8.8.4.4
+                  nameserver 2001:4860:4860::8844
               mode: 0644
               user:
                 name: root
