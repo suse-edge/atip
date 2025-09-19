@@ -20,6 +20,7 @@ metadata:
     deploy-region: emea-spa
     cluster-type: type1         # This is the label used in the hostSelector of the Metal3MachineTemplate to select type 1 nodes
 spec:
+  architecture: x86_64
   online: true
   bootMACAddress: ${BMC_MAC}
   bmc:

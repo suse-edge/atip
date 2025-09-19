@@ -9,13 +9,6 @@ There are two steps to deploy an edge cluster:
 - Create the image for the edge cluster with Kiwi (to create the base image) + Edge Image Builder to customize it including all the packages, dependencies and requirements.
 - Deploy the edge cluster using metal3 and the image created in the previous step.
 
-Important notes:
-
-* In the following examples, we will assume that the management cluster is already deployed and running. If you want to deploy the management cluster, please refer to the [Management Cluster example](../../mgmt-cluster/aarch64/README.md).
-  1. Tech Preview for full aarch64 e2e, mgmt-cluster and downstream clusters using aarch64 architecture. You can follow the steps in the [Management Cluster example](../../mgmt-cluster/aarch64/README.md) to deploy a management cluster using aarch64 architecture following this document.
-  2. x86_64 Management clusters to deploy only aarch64 downstream clusters. You can follow the steps in the rest of the mgmt-cluster folders to deploy a management cluster using x86_64 architecture (following the section `Optional modifications / Add aarch64 architecture support` to enable the arm64 feature) and then deploy the edge cluster using aarch64 architecture following this document.
-* In the following examples, we are assuming that the edge cluster will use Baremetal Servers. If you want to deploy the full workflow using virtual machines, please refer to the [metal3-demo repo](https://github.com/suse-edge/metal3-demo)
-
 ## Create the image for the edge cluster
 
 ### Prerequisites
@@ -80,6 +73,8 @@ The first step is to enroll the new Baremetal host in the management cluster. To
 - `${BMC_PASSWORD}` - The password for the BMC of the new Baremetal host.
 - `${BMC_MAC}` - The MAC address of the new Baremetal host to be used.
 - `${BMC_ADDRESS}` - The URL for the Baremetal host BMC (e.g `redfish-virtualmedia://192.168.200.75/redfish/v1/Systems/1/`). If you want to know more about the different options available depending on your hardware provider, please check the following [link](https://github.com/metal3-io/baremetal-operator/blob/main/docs/api.md).
+
+> **_Note:_** Please makes sure that the bmh file contains the right architecture for the downstream cluster. In this case, it should be `archictecture: aarch64` in order to match with the image generated in the previous step.
 
 In case you want to use a dhcp-less environment, you will need to configure and replace also the following parameters:
 

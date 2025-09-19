@@ -45,6 +45,7 @@ metadata:
   labels:
     cluster-role: control-plane
 spec:
+  architecture: x86_64
   online: true
   bootMACAddress: ${BMC_MAC}
   rootDeviceHints:
