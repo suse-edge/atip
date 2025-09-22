@@ -54,20 +54,6 @@ cp $(pwd)/output/*.iso base-images/
 
 ## Optional modifications
 
-### Add aarch64 architecture support
-
-This is an optional step to add aarch64 architecture support to the management cluster to deploy aarch64 downstream clusters.
-
-1. Modify the helm chart values file for metal3 `kubernetes/helm/values/metal3.yaml` to set the following values:
-
-```yaml
-global:
-  deployArchitecture: arm64
-```
-
-Once you set this value, the management cluster will be able to deploy **exclusively** aarch64 downstream clusters.
-NOTE: This is a limitation of the current implementation of the metal3 chart where you can only deploy one architecture at a time. It will be solved in a future version.
-
 ### Add certificates to use HTTPS server to provide images using TLS
 
 This is an optional step to add certificates to the management cluster to provide images using HTTPS Server (Helm Chart metal3 Version >= 0.7.1)

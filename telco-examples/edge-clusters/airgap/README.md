@@ -153,6 +153,8 @@ The first step is to enroll the new baremetal host in the management cluster. To
 - `${BMC_MAC}` - The MAC address of the new baremetal host to be used.
 - `${BMC_ADDRESS}` - The URL for the baremetal host BMC (e.g `redfish-virtualmedia://192.168.200.75/redfish/v1/Systems/1/`). If you want to know more about the different options available depending on your hardware provider, please check the following [link](https://github.com/metal3-io/baremetal-operator/blob/main/docs/api.md).
 
+> **_Note:_** Please makes sure that the bmh file contains the right architecture for the downstream cluster. In this case, it should be `architecture: x86_64` in order to match with the image generated in the previous step.
+
 In case you want to use a dhcp-less environment, you will need to configure and replace also the following parameters:
 
 - `${CONTROLPLANE_INTERFACE}` - The control plane interface to be used for the edge cluster (e.g `eth0`).

@@ -15,6 +15,7 @@ metadata:
   labels:
     cluster-role: control-plane
 spec:
+  architecture: aarch64
   online: true
   rootDeviceHints:
     deviceName: /dev/vda

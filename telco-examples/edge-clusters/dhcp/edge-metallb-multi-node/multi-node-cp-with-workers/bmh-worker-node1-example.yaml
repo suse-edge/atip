@@ -15,6 +15,7 @@ metadata:
     cluster-role: worker
     nodepool: nodepool-0
 spec:
+  architecture: x86_64
   online: true
   bootMACAddress: ${BMC_NODE1_MAC}
   bmc:

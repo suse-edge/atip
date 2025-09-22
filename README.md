@@ -27,4 +27,4 @@ Note that ipv6, dual-stack and aarch64 scenarios are currently tech-preview and 
 - CPU Manager scenarios
 - AARCH64 architecture:
   1. Tech Preview for full aarch64 e2e, mgmt-cluster and downstream clusters using aarch64 architecture
-  2. x86_64 Management clusters to deploy only aarch64 downstream clusters
+  2. x86_64 Management clusters to deploy both x86_64 and aarch64 downstream clusters 
