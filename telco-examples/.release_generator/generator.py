@@ -54,7 +54,7 @@ def get_release_files(image: str) -> tuple:
                 ["podman", "run", "--rm", image, "cat", path],
                 check=True,
                 stdout=subprocess.PIPE,
-                text=True
+                universal_newlines=True
             )
             contents[path] = result.stdout
     except subprocess.CalledProcessError as e:
@@ -289,7 +289,7 @@ def main():
     # Build image path dynamically based on registry type (commented out)
     major_minor = ".".join(args.version.split(".")[:2])
     if args.registry == "factory":
-        image = f"registry.opensuse.org/isv/suse/edge/factory/test_manifest_images/release-manifest:{args.version}"
+        image = f"registry.opensuse.org/isv/suse/edge/{major_minor}/test_manifest_images/{major_minor}/release-manifest:{args.version}"
     else:  # production
         image = f"registry.suse.com/edge/{major_minor}/release-manifest:{args.version}"
 
