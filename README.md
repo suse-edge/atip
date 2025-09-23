@@ -12,6 +12,7 @@ The following branches (releases) are available:
 - `release-3.1`: [Release 3.1 of SUSE Edge for Telco](https://github.com/suse-edge/atip/tree/release-3.1)
 - `release-3.2`: [Release 3.2 of SUSE Edge for Telco](https://github.com/suse-edge/atip/tree/release-3.2)
 - `release-3.3`: [Release 3.3 of SUSE Edge for Telco](https://github.com/suse-edge/atip/tree/release-3.3)
+- `release-3.4`: [Release 3.4 of SUSE Edge for Telco](https://github.com/suse-edge/atip/tree/release-3.4)
 
 ## Scenarios
 
