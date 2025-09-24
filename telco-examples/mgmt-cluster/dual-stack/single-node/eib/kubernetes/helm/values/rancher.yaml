@@ -1,0 +1,6 @@
+hostname: rancher-${MGMT_CLUSTER_IP_V4}.sslip.io
+bootstrapPassword: "foobar"
+replicas: 1
+global:
+  cattle:
+    systemDefaultRegistry: "registry.rancher.com"
