@@ -31,7 +31,7 @@ You need to modify the following values in the `network/${NODE_HOSTNAME}.yaml` f
 
 - `${MGMT_GATEWAY}` - This is the gateway IP of your management cluster network.
 - `${MGMT_DNS}` - This is the DNS IP of your management cluster network.
-- `${MGMT_NODE1_IP}` - This is the static IP of your management cluster node. This IP is different for each node (e.g `${MGMT_NODE2_IP}`, `${MGMT_NODE3_IP}), and it's also different from any of the VIP Address reserved before for the Load Balancer.
+- `${MGMT_NODE1_IP}` - This is the static IP of your management cluster node. This IP is different for each node (e.g `${MGMT_NODE2_IP}`, `${MGMT_NODE3_IP}`), and it's also different from any of the VIP Address reserved before for the Load Balancer.
 - `${MGMT_MAC}` - This is the MAC address of your management cluster node.
 
 Inside this file, you can also see some comments to specify the network configuration for the management cluster using a DHCP server.
