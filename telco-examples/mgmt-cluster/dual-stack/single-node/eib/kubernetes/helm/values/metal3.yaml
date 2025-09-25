@@ -1,0 +1,16 @@
+global:
+  ironicIP: ${MGMT_CLUSTER_IP_V4}
+  enable_vmedia_tls: false
+  additionalTrustedCAs: false
+metal3-ironic:
+  global:
+    predictableNicNames: true
+  listenOnAll: true
+  persistence:
+    ironic:
+      size: "5Gi"
+  service:
+    type: NodePort
+metal3-baremetal-operator:
+  baremetaloperator:
+    externalHttpIPv6: ${MGMT_CLUSTER_IPV6}

@@ -1,0 +1,7 @@
+service-cidr: 10.96.0.0/12,fd12:4567:789c::/112
+cluster-cidr: 193.168.0.0/18,fd12:4567:789b::/48
+cni:
+  - cilium
+write-kubeconfig-mode: '0644'
+selinux: true
+system-default-registry: registry.rancher.com
